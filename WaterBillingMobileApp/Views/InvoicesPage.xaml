@@ -1,0 +1,33 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             x:Class="WaterBillingMobileApp.Views.InvoicesPage"
+             xmlns:dto="clr-namespace:WaterBillingMobileApp.DTO"
+             x:DataType="viewmodels:InvoicesViewModel"
+             Title="Invoices">
+
+    <StackLayout Padding="20" Spacing="10">
+
+        <Label Text="Invoices" FontSize="24" HorizontalOptions="Center" />
+
+        <RefreshView IsRefreshing="{Binding IsBusy}"
+                     Command="{Binding LoadInvoicesCommand}">
+            <CollectionView ItemsSource="{Binding Invoices}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:InvoiceDTO">
+                        <Frame BorderColor="LightGray" CornerRadius="8" Padding="10" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding InvoiceNumber, StringFormat='Invoice #: {0}'}" FontAttributes="Bold" />
+                                <Label Text="{Binding Date, StringFormat='Date: {0:dd/MM/yyyy}'}" />
+                                <Label Text="{Binding TotalAmount, StringFormat='Total: {0:C}'}" />
+                                <Label Text="{Binding Status}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+    </StackLayout>
+
+</ContentPage>

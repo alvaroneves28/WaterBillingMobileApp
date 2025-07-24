@@ -1,0 +1,32 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             x:Class="WaterBillingMobileApp.Views.ConsumptionHistoryPage"
+             xmlns:dto="clr-namespace:WaterBillingMobileApp.DTO"
+             x:DataType="viewmodels:ConsumptionHistoryViewModel"
+             Title="Consumption History">
+
+    <StackLayout Padding="20" Spacing="10">
+
+        <Label Text="Consumption History" FontSize="24" HorizontalOptions="Center" />
+
+        <RefreshView IsRefreshing="{Binding IsBusy}"
+             Command="{Binding LoadHistoryCommand}">
+            <CollectionView ItemsSource="{Binding ConsumptionHistory}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:ConsumptionHistoryDTO">
+                        <Frame BorderColor="LightGray" CornerRadius="8" Padding="10" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding MeterId, StringFormat='Meter: {0}'}" FontAttributes="Bold"/>
+                                <Label Text="{Binding Date, StringFormat='Date: {0:dd/MM/yyyy}'}" />
+                                <Label Text="{Binding Volume, StringFormat='Value: {0} m³'}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+
+    </StackLayout>
+</ContentPage>

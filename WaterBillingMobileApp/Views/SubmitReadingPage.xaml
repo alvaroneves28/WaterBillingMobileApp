@@ -1,0 +1,27 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             x:Class="WaterBillingMobileApp.Views.SubmitReadingPage"
+             x:DataType="viewmodels:SubmitReadingViewModel"
+             Title="Submit Reading">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Select Meter:" />
+            <Picker ItemsSource="{Binding Meters}"
+                    ItemDisplayBinding="{Binding Id}"
+                    SelectedItem="{Binding SelectedMeter}" />
+
+            <Label Text="Value (m³):" />
+            <Entry Text="{Binding Value}" Keyboard="Numeric" />
+
+            <Label Text="Date:" />
+            <DatePicker Date="{Binding Date}" />
+
+            <Button Text="Submit"
+                    Command="{Binding SubmitCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

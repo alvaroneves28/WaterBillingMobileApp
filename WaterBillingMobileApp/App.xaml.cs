@@ -1,4 +1,4 @@
-﻿using WaterBillingMobileApp.View;
+﻿using WaterBillingMobileApp.Views;
 
 namespace WaterBillingMobileApp
 {

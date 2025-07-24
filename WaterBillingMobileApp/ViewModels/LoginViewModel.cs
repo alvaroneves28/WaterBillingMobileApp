@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Input;
 using WaterBillingMobileApp.Model;
 using WaterBillingMobileApp.Services;
 
@@ -14,13 +15,40 @@ namespace WaterBillingMobileApp.ViewModel
             LoginCommand = new Command(async () => await LoginAsync());
         }
 
-        public string Email { get; set; }
-        public string Password { get; set; }
+        private string _email;
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                if (_email == value) return;
+                _email = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Email)));
+            }
+        }
 
-        public Command LoginCommand { get; }
+        private string _password;
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (_password == value) return;
+                _password = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Password)));
+            }
+        }
+
+        public ICommand LoginCommand { get; }
 
         private async Task LoginAsync()
         {
+            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            {
+                await Shell.Current.DisplayAlert("Warning", "Please fill in all fields.", "OK");
+                return;
+            }
+
             try
             {
                 var request = new LoginRequest { Email = Email, Password = Password };
@@ -28,22 +56,20 @@ namespace WaterBillingMobileApp.ViewModel
 
                 if (!string.IsNullOrEmpty(response?.Token))
                 {
-                    // Guardar token no SecureStorage
                     await SecureStorage.SetAsync("auth_token", response.Token);
 
-                    // Navegar para a página principal
-                    Application.Current.MainPage = new NavigationPage(new MainPage());
-
+                    // Replace MainPage with Shell and navigate to dashboard
+                    Application.Current.MainPage = new AppShell();
+                    await Shell.Current.GoToAsync("//MainPage");
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Erro", "Credenciais inválidas.", "OK");
+                    await Shell.Current.DisplayAlert("Login Failed", "Invalid credentials.", "OK");
                 }
             }
             catch (Exception ex)
             {
-                var errorMessage = ex.InnerException?.Message ?? ex.Message;
-                await App.Current.MainPage.DisplayAlert("Erro", "Falha ao autenticar: " + ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", $"Authentication failed: {ex.Message}", "OK");
             }
         }
 

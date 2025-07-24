@@ -1,14 +1,56 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="WaterBillingMobileApp.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:WaterBillingMobileApp"
-    Title="WaterBillingMobileApp">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:WaterBillingMobileApp.Views"
+       xmlns:pages="clr-namespace:WaterBillingMobileApp"
+       x:Class="WaterBillingMobileApp.AppShell">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Dashboard / Home -->
+    <ShellItem Title="Dashboard"
+               Icon="home.png"
+               Route="MainPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:MainPage}" />
+    </ShellItem>
+
+     <!--Submit Meter Reading--> 
+    <ShellItem Title="Submit Reading"
+               Icon="reading.png"
+               Route="SubmitReadingPage">
+        <ShellContent ContentTemplate="{DataTemplate views:SubmitReadingPage}" />
+    </ShellItem>
+
+    <!-- Consumption History -->
+    <ShellItem Title="Consumption History"
+               Icon="history.png"
+               Route="ConsumptionHistoryPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ConsumptionHistoryPage}" />
+    </ShellItem>
+
+    <!-- Invoices -->
+    <ShellItem Title="Invoices"
+               Icon="invoice.png"
+               Route="InvoicesPage">
+        <ShellContent ContentTemplate="{DataTemplate views:InvoicesPage}" />
+    </ShellItem>
+
+    <!-- Rates and Meter Request Status --><!--
+    <ShellItem Title="Rates and Status"
+               Icon="rates.png"
+               Route="RatesAndStatusPage">
+        <ShellContent ContentTemplate="{DataTemplate views:RatesAndStatusPage}" />
+    </ShellItem>
+
+    --><!-- Profile --><!--
+    <ShellItem Title="Profile"
+               Icon="profile.png"
+               Route="ProfilePage">
+        <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
+    </ShellItem>
+
+    --><!-- About Page --><!--
+    <ShellItem Title="About"
+               Icon="info.png"
+               Route="AboutPage">
+        <ShellContent ContentTemplate="{DataTemplate views:AboutPage}" />
+    </ShellItem>-->
 
 </Shell>
