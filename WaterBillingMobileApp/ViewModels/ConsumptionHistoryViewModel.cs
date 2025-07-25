@@ -10,11 +10,14 @@ namespace WaterBillingMobileApp.ViewModels
     public partial class ConsumptionHistoryViewModel : ObservableObject
     {
         private readonly INavigation _navigation;
+        private readonly AuthService _authService;
         private HttpClient _httpClient;
 
-        public ConsumptionHistoryViewModel(INavigation navigation)
+        public ConsumptionHistoryViewModel(INavigation navigation, AuthService authService)
         {
             _navigation = navigation;
+            _authService = authService;
+
             LoadHistoryCommand = new AsyncRelayCommand(LoadHistoryAsync);
             _ = InitializeAsync();
         }
@@ -31,7 +34,7 @@ namespace WaterBillingMobileApp.ViewModels
         {
             try
             {
-                _httpClient = await AuthService.CreateAuthenticatedClientAsync();
+                _httpClient = await _authService.CreateAuthenticatedClientAsync(); // Usar instância
                 await LoadHistoryAsync();
             }
             catch (Exception ex)
@@ -61,5 +64,4 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
     }
-
 }

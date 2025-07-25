@@ -32,21 +32,21 @@
         <ShellContent ContentTemplate="{DataTemplate views:InvoicesPage}" />
     </ShellItem>
 
-    <!-- Rates and Meter Request Status --><!--
+    <!-- Rates and Meter Request Status -->
     <ShellItem Title="Rates and Status"
                Icon="rates.png"
                Route="RatesAndStatusPage">
         <ShellContent ContentTemplate="{DataTemplate views:RatesAndStatusPage}" />
     </ShellItem>
 
-    --><!-- Profile --><!--
+    <!-- Profile -->
     <ShellItem Title="Profile"
                Icon="profile.png"
                Route="ProfilePage">
         <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
     </ShellItem>
 
-    --><!-- About Page --><!--
+    <!-- About Page --><!--
     <ShellItem Title="About"
                Icon="info.png"
                Route="AboutPage">

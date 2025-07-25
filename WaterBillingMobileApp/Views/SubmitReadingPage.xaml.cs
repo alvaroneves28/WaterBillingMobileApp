@@ -1,13 +1,15 @@
+using WaterBillingMobileApp.Services;
 using WaterBillingMobileApp.ViewModels;
 
 namespace WaterBillingMobileApp.Views;
 
 public partial class SubmitReadingPage : ContentPage
 {
-    public SubmitReadingPage()
+    public SubmitReadingPage(INavigation navigation, AuthService authService)
     {
         InitializeComponent();
-        BindingContext = new SubmitReadingViewModel(Navigation);
+        BindingContext = new SubmitReadingViewModel(navigation, authService);
     }
 }
+
 

@@ -1,12 +1,17 @@
-﻿using WaterBillingMobileApp.ViewModels;
+﻿using WaterBillingMobileApp.Services;
+using WaterBillingMobileApp.ViewModels;
 
 namespace WaterBillingMobileApp;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    private readonly AuthService _authService;
+
+    public MainPage(AuthService authService)
     {
         InitializeComponent();
-        BindingContext = new MainPageViewModel(Navigation); 
+        _authService = authService;
+
+        BindingContext = new MainPageViewModel(Navigation, _authService);
     }
 }

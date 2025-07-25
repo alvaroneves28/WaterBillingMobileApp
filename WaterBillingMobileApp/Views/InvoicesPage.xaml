@@ -17,8 +17,8 @@
                     <DataTemplate x:DataType="dto:InvoiceDTO">
                         <Frame BorderColor="LightGray" CornerRadius="8" Padding="10" Margin="5">
                             <VerticalStackLayout>
-                                <Label Text="{Binding InvoiceNumber, StringFormat='Invoice #: {0}'}" FontAttributes="Bold" />
-                                <Label Text="{Binding Date, StringFormat='Date: {0:dd/MM/yyyy}'}" />
+                                <Label Text="{Binding Id, StringFormat='Invoice #: {0}'}" FontAttributes="Bold" />
+                                <Label Text="{Binding IssueDate, StringFormat='Date: {0:dd/MM/yyyy}'}" />
                                 <Label Text="{Binding TotalAmount, StringFormat='Total: {0:C}'}" />
                                 <Label Text="{Binding Status}" />
                             </VerticalStackLayout>

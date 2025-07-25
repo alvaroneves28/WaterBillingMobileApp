@@ -84,7 +84,7 @@ namespace WaterBillingMobileApp.Services
         /// <summary>
         /// Cria um HttpClient com o token JWT já configurado.
         /// </summary>
-        public static async Task<HttpClient> CreateAuthenticatedClientAsync()
+        public async Task<HttpClient> CreateAuthenticatedClientAsync()
         {
             var token = await SecureStorage.GetAsync(TokenKey);
             if (string.IsNullOrEmpty(token))

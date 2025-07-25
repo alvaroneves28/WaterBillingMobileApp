@@ -10,11 +10,14 @@ namespace WaterBillingMobileApp.ViewModels
     public partial class InvoicesViewModel : ObservableObject
     {
         private readonly INavigation _navigation;
+        private readonly AuthService _authService;
         private HttpClient _httpClient;
 
-        public InvoicesViewModel(INavigation navigation)
+        public InvoicesViewModel(INavigation navigation, AuthService authService)
         {
             _navigation = navigation;
+            _authService = authService;
+
             LoadInvoicesCommand = new AsyncRelayCommand(LoadInvoicesAsync);
             _ = InitializeAsync();
         }
@@ -31,7 +34,7 @@ namespace WaterBillingMobileApp.ViewModels
         {
             try
             {
-                _httpClient = await AuthService.CreateAuthenticatedClientAsync();
+                _httpClient = await _authService.CreateAuthenticatedClientAsync(); // Usar instância
                 await LoadInvoicesAsync();
             }
             catch (Exception ex)
@@ -49,7 +52,7 @@ namespace WaterBillingMobileApp.ViewModels
             {
                 IsBusy = true;
                 var invoicesList = await _httpClient.GetFromJsonAsync<List<InvoiceDTO>>("Customer/invoices");
-                Invoices = new ObservableCollection<InvoiceDTO>(invoicesList);
+                Invoices = new ObservableCollection<InvoiceDTO>(invoicesList ?? new());
             }
             catch (Exception ex)
             {

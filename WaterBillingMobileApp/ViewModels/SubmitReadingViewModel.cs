@@ -12,11 +12,13 @@ namespace WaterBillingMobileApp.ViewModels;
 public partial class SubmitReadingViewModel : ObservableObject
 {
     private readonly INavigation _navigation;
+    private readonly AuthService _authService;
     private HttpClient _httpClient;
 
-    public SubmitReadingViewModel(INavigation navigation)
+    public SubmitReadingViewModel(INavigation navigation, AuthService authService)
     {
         _navigation = navigation;
+        _authService = authService;
 
         InitializeAsync();
     }
@@ -25,13 +27,12 @@ public partial class SubmitReadingViewModel : ObservableObject
     {
         try
         {
-            _httpClient = await AuthService.CreateAuthenticatedClientAsync();
+            _httpClient = await _authService.CreateAuthenticatedClientAsync();
             await LoadMetersAsync();
         }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Error", "Authentication error: " + ex.Message, "OK");
-           
         }
     }
 
@@ -53,7 +54,7 @@ public partial class SubmitReadingViewModel : ObservableObject
         try
         {
             var result = await _httpClient.GetFromJsonAsync<List<MeterDto>>("Customer/mine");
-            Meters = new ObservableCollection<MeterDto>(result);
+            Meters = new ObservableCollection<MeterDto>(result ?? new());
         }
         catch (Exception ex)
         {
