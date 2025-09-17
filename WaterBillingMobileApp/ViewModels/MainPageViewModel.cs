@@ -19,7 +19,8 @@ namespace WaterBillingMobileApp.ViewModels
         [RelayCommand]
         private async Task SubmitReading()
         {
-            await _navigation.PushAsync(new SubmitReadingPage(_navigation, _authService));
+            var submitReadingViewModel = new SubmitReadingViewModel(_navigation, _authService);
+            await _navigation.PushAsync(new MeterReadingPage(submitReadingViewModel));
         }
 
         [RelayCommand]

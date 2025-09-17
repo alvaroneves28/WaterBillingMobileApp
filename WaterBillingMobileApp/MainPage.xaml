@@ -7,29 +7,192 @@
              Title="Dashboard">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="20" Spacing="25">
 
-            <Label Text="Welcome to the Water Billing App"
-                   FontSize="24"
-                   HorizontalOptions="Center" />
+            
+            <Border BackgroundColor="#512BD4" 
+                    StrokeShape="RoundRectangle 20" 
+                    Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Image Source="appicon.png" 
+                           HeightRequest="60" 
+                           WidthRequest="60"
+                           HorizontalOptions="Center" />
+                    <Label Text="Welcome to Water Billing" 
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+                    <Label Text="Manage your water consumption easily" 
+                           FontSize="16"
+                           TextColor="LightBlue"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
 
-            <Button Text="Submit Meter Reading"
-                    Command="{Binding SubmitReadingCommand}" />
+            
+            <Grid ColumnDefinitions="*,*" 
+                  RowDefinitions="*,*,*" 
+                  ColumnSpacing="15"
+                  RowSpacing="15">
 
-            <Button Text="View Consumption History"
-                    Command="{Binding ViewConsumptionHistoryCommand}" />
+                
+                <Border Grid.Row="0" Grid.Column="0" 
+                        BackgroundColor="LightGreen" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SubmitReadingCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="Submit Reading" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Record your meter reading" 
+                               FontSize="12"
+                               TextColor="DarkGreen"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <Button Text="View Invoices"
-                    Command="{Binding ViewInvoicesCommand}" />
+                
+                <Border Grid.Row="0" Grid.Column="1" 
+                        BackgroundColor="LightBlue" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewConsumptionHistoryCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="History" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="View consumption data" 
+                               FontSize="12"
+                               TextColor="DarkBlue"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <Button Text="Rates and Meter Request Status"
-                    Command="{Binding ViewRatesAndStatusCommand}" />
+                
+                <Border Grid.Row="1" Grid.Column="0" 
+                        BackgroundColor="LightYellow" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewInvoicesCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="Invoices" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Manage your bills" 
+                               FontSize="12"
+                               TextColor="DarkGoldenrod"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <Button Text="My Profile"
-                    Command="{Binding ViewProfileCommand}" />
+                
+                <Border Grid.Row="1" Grid.Column="1" 
+                        BackgroundColor="LightCoral" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewRatesAndStatusCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="Rates" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="View pricing info" 
+                               FontSize="12"
+                               TextColor="DarkRed"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <Button Text="About the App"
-                    Command="{Binding ViewAboutCommand}" />
+                <Border Grid.Row="2" Grid.Column="0" 
+                        BackgroundColor="Plum" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewProfileCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="Profile" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Manage account" 
+                               FontSize="12"
+                               TextColor="Purple"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                
+                <Border Grid.Row="2" Grid.Column="1" 
+                        BackgroundColor="LightSteelBlue" 
+                        StrokeShape="RoundRectangle 15">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewAboutCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" Padding="15">
+                        <Label Text="About" 
+                               FontAttributes="Bold" 
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="App information" 
+                               FontSize="12"
+                               TextColor="DarkSlateBlue"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+
+            <Border BackgroundColor="WhiteSmoke" 
+                    Stroke="#512BD4"
+                    StrokeShape="RoundRectangle 15" 
+                    Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Quick Overview" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="#512BD4"
+                           HorizontalOptions="Center" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="This Month" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="24.8 m3" FontSize="16" TextColor="#512BD4" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Last Bill" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="32.45 EUR" FontSize="16" TextColor="Green" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Next Reading" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="5 days" FontSize="16" TextColor="Orange" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

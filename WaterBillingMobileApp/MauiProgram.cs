@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using WaterBillingMobileApp.Services;
 using WaterBillingMobileApp.Views;
+using WaterBillingMobileApp.ViewModels;
+using WaterBillingMobileApp.ViewModel;
 
 namespace WaterBillingMobileApp
 {
@@ -8,8 +10,6 @@ namespace WaterBillingMobileApp
     {
         public static MauiApp CreateMauiApp()
         {
-            
-
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -18,13 +18,39 @@ namespace WaterBillingMobileApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.Services.AddSingleton<ProfilePage>();
+
+            // Services
+            builder.Services.AddSingleton<NotificationService>();
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<ProfileService>();
+
+
+            // ViewModels
+            builder.Services.AddTransient<SubmitReadingViewModel>();
+            builder.Services.AddTransient<AnonymousRequestViewModel>();
+            builder.Services.AddTransient<ConsumptionHistoryViewModel>();
+            builder.Services.AddTransient<ForgotPasswordViewModel>();
+            builder.Services.AddTransient<InvoiceDetailViewModel>();
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<ProfileViewModel>();
+            builder.Services.AddTransient<RatesAndStatusViewModel>();
+
+
+            // Pages
+            //builder.Services.AddTransient<AboutPage>();
+            builder.Services.AddTransient<AnonymousRequestPage>();
+            builder.Services.AddTransient<ConsumptionHistoryPage>();
+            builder.Services.AddTransient<ForgotPasswordPage>();
+            builder.Services.AddTransient<InvoiceDetailPage>();
+            builder.Services.AddTransient<InvoicesPage>();
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<MeterReadingPage>();
+            builder.Services.AddTransient<ProfilePage>();
+            builder.Services.AddTransient<RatesAndStatusPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
             return builder.Build();
         }
     }

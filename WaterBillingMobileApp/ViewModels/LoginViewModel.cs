@@ -13,6 +13,8 @@ namespace WaterBillingMobileApp.ViewModel
         {
             _authService = new AuthService();
             LoginCommand = new Command(async () => await LoginAsync());
+            ForgotPasswordCommand = new Command(async () => await NavigateToForgotPasswordAsync());
+            RequestMeterCommand = new Command(async () => await NavigateToAnonymousRequestAsync());
         }
 
         private string _email;
@@ -40,6 +42,8 @@ namespace WaterBillingMobileApp.ViewModel
         }
 
         public ICommand LoginCommand { get; }
+        public ICommand ForgotPasswordCommand { get; }
+        public ICommand RequestMeterCommand { get; }
 
         private async Task LoginAsync()
         {
@@ -70,6 +74,30 @@ namespace WaterBillingMobileApp.ViewModel
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", $"Authentication failed: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task NavigateToForgotPasswordAsync()
+        {
+            try
+            {
+                await Shell.Current.Navigation.PushAsync(new WaterBillingMobileApp.Views.ForgotPasswordPage());
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Navigation error: {ex.Message}", "OK");
+            }
+        }
+
+        private async Task NavigateToAnonymousRequestAsync()
+        {
+            try
+            {
+                await Shell.Current.Navigation.PushAsync(new WaterBillingMobileApp.Views.AnonymousRequestPage());
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Navigation error: {ex.Message}", "OK");
             }
         }
 

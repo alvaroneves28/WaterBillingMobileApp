@@ -19,6 +19,7 @@ namespace WaterBillingMobileApp.ViewModels
             _authService = authService;
 
             LoadInvoicesCommand = new AsyncRelayCommand(LoadInvoicesAsync);
+            ViewInvoiceDetailCommand = new AsyncRelayCommand<InvoiceDTO>(ViewInvoiceDetailAsync);
             _ = InitializeAsync();
         }
 
@@ -27,6 +28,8 @@ namespace WaterBillingMobileApp.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
+
+        public IAsyncRelayCommand<InvoiceDTO> ViewInvoiceDetailCommand { get; }
 
         public IAsyncRelayCommand LoadInvoicesCommand { get; }
 
@@ -61,6 +64,20 @@ namespace WaterBillingMobileApp.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        private async Task ViewInvoiceDetailAsync(InvoiceDTO invoice)
+        {
+            if (invoice == null) return;
+
+            try
+            {
+                await Shell.Current.Navigation.PushAsync(new Views.InvoiceDetailPage(invoice));
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Navigation error: {ex.Message}", "OK");
             }
         }
     }

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Text.Json;
 using WaterBillingMobileApp.DTO;
-using WaterBillingMobileApp.Model;
 using WaterBillingMobileApp.Services;
 
 namespace WaterBillingMobileApp.ViewModels;
@@ -19,7 +18,6 @@ public partial class SubmitReadingViewModel : ObservableObject
     {
         _navigation = navigation;
         _authService = authService;
-
         InitializeAsync();
     }
 
@@ -81,7 +79,6 @@ public partial class SubmitReadingViewModel : ObservableObject
         try
         {
             var response = await _httpClient.PostAsJsonAsync("Customer/consumptions", dto);
-
             if (response.IsSuccessStatusCode)
             {
                 await Shell.Current.DisplayAlert("Success", "Consumption registered successfully.", "OK");

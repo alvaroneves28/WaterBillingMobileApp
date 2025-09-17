@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             x:Class="WaterBillingMobileApp.Views.InvoiceDetailPage"
+             x:DataType="viewmodels:InvoiceDetailViewModel"
+             Title="Invoice Details">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+           
+            <Border
+                   BackgroundColor="LightBlue" 
+                   Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding Invoice.Id, StringFormat='Invoice #{0}'}" 
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="DarkBlue" />
+
+                    <Label Text="{Binding Invoice.IssueDate, StringFormat='Issue Date: {0:dd/MM/yyyy}'}" 
+                           FontSize="16"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding Invoice.Status}" 
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{Binding StatusColor}" />
+                </VerticalStackLayout>
+            </Border>
+
+           
+            <Border 
+                   BackgroundColor="LightGreen" 
+                   Padding="20" >
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Total Amount" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="{Binding Invoice.TotalAmount, StringFormat='{0:C}'}" 
+                           FontSize="32" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="DarkGreen" />
+                </VerticalStackLayout>
+            </Border>
+
+          
+            <Border Padding="15">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Consumption Details" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#512BD4" />
+
+                    <Grid ColumnDefinitions="*,*" 
+                          RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnSpacing="10"
+                          RowSpacing="8">
+
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Text="Meter ID:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="{Binding InvoiceDetail.MeterId}" />
+
+                        <Label Grid.Row="1" Grid.Column="0" 
+                               Text="Previous Reading:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="1" 
+                               Text="{Binding InvoiceDetail.PreviousReading, StringFormat='{0} m3'}" />
+
+                        <Label Grid.Row="2" Grid.Column="0" 
+                               Text="Current Reading:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="2" Grid.Column="1" 
+                               Text="{Binding InvoiceDetail.CurrentReading, StringFormat='{0} m3'}" />
+
+                        <Label Grid.Row="3" Grid.Column="0" 
+                               Text="Consumption:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="3" Grid.Column="1" 
+                               Text="{Binding InvoiceDetail.ConsumptionVolume, StringFormat='{0} m3'}"
+                               TextColor="DarkBlue"
+                               FontAttributes="Bold" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            
+            <Border Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Billing Period" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="DarkOrange" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="From:" FontAttributes="Bold" />
+                            <Label Text="{Binding InvoiceDetail.PeriodStart, StringFormat='{0:dd/MM/yyyy}'}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="To:" FontAttributes="Bold" />
+                            <Label Text="{Binding InvoiceDetail.PeriodEnd, StringFormat='{0:dd/MM/yyyy}'}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+          
+            <Border  Padding="15">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Tariff Breakdown" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="Purple" />
+
+                    <CollectionView ItemsSource="{Binding InvoiceDetail.TariffBreakdown}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="2*,*,*" 
+                                      ColumnSpacing="10"
+                                      Padding="5">
+
+                                    <Label Grid.Column="0" 
+                                           Text="{Binding Description}" />
+
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding Volume, StringFormat='{0} m3'}"
+                                           HorizontalTextAlignment="Center" />
+
+                                    <Label Grid.Column="2" 
+                                           Text="{Binding Amount, StringFormat='{0:C}'}"
+                                           HorizontalTextAlignment="End"
+                                           FontAttributes="Bold" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                   
+                    <BoxView HeightRequest="1" BackgroundColor="Gray" />
+
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="Water Consumption Subtotal:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Column="2" 
+                               Text="{Binding InvoiceDetail.WaterSubtotal, StringFormat='{0:C}'}"
+                               HorizontalTextAlignment="End"
+                               FontAttributes="Bold" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="Service Fee:" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Column="2" 
+                               Text="{Binding InvoiceDetail.ServiceFee, StringFormat='{0:C}'}"
+                               HorizontalTextAlignment="End"
+                               FontAttributes="Bold" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="Tax (23%):" 
+                               FontAttributes="Bold" />
+                        <Label Grid.Column="2" 
+                               Text="{Binding InvoiceDetail.TaxAmount, StringFormat='{0:C}'}"
+                               HorizontalTextAlignment="End"
+                               FontAttributes="Bold" />
+                    </Grid>
+
+                    <BoxView HeightRequest="2" BackgroundColor="DarkGreen" />
+
+                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="TOTAL:" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="DarkGreen" />
+                        <Label Grid.Column="2" 
+                               Text="{Binding Invoice.TotalAmount, StringFormat='{0:C}'}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="DarkGreen"
+                               HorizontalTextAlignment="End" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+    
+            <VerticalStackLayout Spacing="10">
+                <Button Text="Download PDF" 
+                        Command="{Binding DownloadPdfCommand}"
+                        BackgroundColor="#512BD4"
+                        TextColor="White"
+                        CornerRadius="8" />
+
+                <Button Text="Share Invoice" 
+                        Command="{Binding ShareInvoiceCommand}"
+                        BackgroundColor="DarkGreen"
+                        TextColor="White"
+                        CornerRadius="8" />
+
+                <Button Text="Back to Invoices" 
+                        Command="{Binding BackToInvoicesCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#512BD4"
+                        BorderWidth="1"
+                        BorderColor="#512BD4"
+                        CornerRadius="8" />
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" 
+                             IsRunning="{Binding IsBusy}"
+                             Color="#512BD4" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

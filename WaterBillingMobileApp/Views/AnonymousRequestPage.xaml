@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WaterBillingMobileApp.Views.AnonymousRequestPage"
+             Title="Request Water Meter">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Image Source="appicon.png" 
+                   HeightRequest="80" 
+                   WidthRequest="80"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Request New Water Meter" 
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Fill out the form below to request a new water meter installation. We will review your request and contact you soon." 
+                   FontSize="14"
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center"
+                   TextColor="Gray" />
+
+           
+            <Border Padding="15">
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Personal Information" FontAttributes="Bold" FontSize="18" />
+
+                    <Label Text="Full Name *" />
+                    <Entry Text="{Binding FullName}" 
+                           Placeholder="Enter your full name" />
+
+                    <Label Text="Email Address *" />
+                    <Entry Text="{Binding Email}" 
+                           Placeholder="Enter your email address"
+                           Keyboard="Email" />
+
+                    <Label Text="Phone Number *" />
+                    <Entry Text="{Binding PhoneNumber}" 
+                           Placeholder="Enter your phone number"
+                           Keyboard="Telephone" />
+
+                    <Label Text="Installation Address *" />
+                    <Editor Text="{Binding InstallationAddress}" 
+                            Placeholder="Enter the complete address where the meter should be installed"
+                            HeightRequest="80" />
+
+                    <Label Text="Additional Comments" />
+                    <Editor Text="{Binding Comments}" 
+                            Placeholder="Any additional information or special requests"
+                            HeightRequest="60" />
+
+                </VerticalStackLayout>
+            </Border>
+
+         
+            <Button Text="Submit Request" 
+                    Command="{Binding SubmitRequestCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HeightRequest="50" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" 
+                             IsRunning="{Binding IsBusy}"
+                             Color="#512BD4" />
+
+           
+            <BoxView HeightRequest="1" BackgroundColor="Gray" Margin="0,20,0,10" />
+
+            <Label Text="Water Tariffs and Information" 
+                   FontAttributes="Bold" 
+                   FontSize="20" 
+                   HorizontalOptions="Center" />
+
+            <Label Text="Current water tariff brackets:" 
+                   FontSize="16" 
+                   Margin="0,10,0,5" />
+
+            <RefreshView IsRefreshing="{Binding IsLoadingTariffs}"
+                         Command="{Binding LoadTariffsCommand}">
+                <CollectionView ItemsSource="{Binding PublicTariffs}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                   BackgroundColor="LightBlue" 
+                                   Padding="15" 
+                                   Margin="5">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding MinVolume, StringFormat='From {0} m3'}" 
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding MaxVolume, StringFormat='To {0} m3'}" 
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding PricePerCubicMeter, StringFormat='Price: {0:C} per m3'}" 
+                                           FontSize="16"
+                                           TextColor="DarkBlue"
+                                           FontAttributes="Bold" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+           
+            <Border 
+                   BackgroundColor="LightYellow" 
+                   Padding="15" >
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Important Information" 
+                           FontAttributes="Bold" 
+                           FontSize="16"
+                           TextColor="DarkOrange" />
+
+                    <Label Text="- Installation typically takes 5-10 business days after approval" />
+                    <Label Text="- You will receive an email confirmation once your request is submitted" />
+                    <Label Text="- Our team will contact you to schedule the installation" />
+                    <Label Text="- Installation fees may apply depending on your location" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Back to Login" 
+                    Command="{Binding BackToLoginCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="#512BD4"
+                    BorderWidth="1"
+                    BorderColor="#512BD4"
+                    CornerRadius="8"
+                    HeightRequest="50" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

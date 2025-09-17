@@ -11,11 +11,11 @@
         <ShellContent ContentTemplate="{DataTemplate pages:MainPage}" />
     </ShellItem>
 
-     <!--Submit Meter Reading--> 
+    <!--Submit Meter Reading-->
     <ShellItem Title="Submit Reading"
                Icon="reading.png"
                Route="SubmitReadingPage">
-        <ShellContent ContentTemplate="{DataTemplate views:SubmitReadingPage}" />
+        <ShellContent ContentTemplate="{DataTemplate views:MeterReadingPage}" />
     </ShellItem>
 
     <!-- Consumption History -->
@@ -46,11 +46,16 @@
         <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
     </ShellItem>
 
-    <!-- About Page --><!--
+    <!-- About Page -->
     <ShellItem Title="About"
                Icon="info.png"
                Route="AboutPage">
         <ShellContent ContentTemplate="{DataTemplate views:AboutPage}" />
-    </ShellItem>-->
+    </ShellItem>
+
+    <!-- Menu Item para utilizadores anonimos -->
+    <MenuItem Text="Request Meter (Anonymous)" 
+              IconImageSource="meter_request.png"
+              Command="{Binding GoToAnonymousRequestCommand}" />
 
 </Shell>

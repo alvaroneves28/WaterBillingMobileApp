@@ -1,4 +1,4 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
              x:Class="WaterBillingMobileApp.Views.ConsumptionHistoryPage"
@@ -19,7 +19,7 @@
                             <VerticalStackLayout>
                                 <Label Text="{Binding MeterId, StringFormat='Meter: {0}'}" FontAttributes="Bold"/>
                                 <Label Text="{Binding Date, StringFormat='Date: {0:dd/MM/yyyy}'}" />
-                                <Label Text="{Binding Volume, StringFormat='Value: {0} m³'}" />
+                                <Label Text="{Binding Volume, StringFormat='Value: {0} m3'}" />
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
@@ -30,3 +30,4 @@
 
     </StackLayout>
 </ContentPage>
+

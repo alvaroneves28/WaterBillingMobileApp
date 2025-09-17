@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
 using WaterBillingMobileApp.DTO;
 using WaterBillingMobileApp.Services;
 
@@ -19,7 +18,7 @@ namespace WaterBillingMobileApp.ViewModels
             LoadProfileCommand = new AsyncRelayCommand(LoadProfileAsync);
             SaveProfileCommand = new AsyncRelayCommand(SaveProfileAsync);
             ChangePasswordCommand = new AsyncRelayCommand(ChangePasswordAsync);
-
+            ChangeEmailCommand = new AsyncRelayCommand(ChangeEmailAsync);
 
             _ = InitializeAsync(); // Carrega tudo no arranque
         }
@@ -45,13 +44,23 @@ namespace WaterBillingMobileApp.ViewModels
         [ObservableProperty]
         private string newPassword;
 
+        // Novas propriedades adicionadas
+        [ObservableProperty]
+        private string confirmPassword;
+
+        [ObservableProperty]
+        private string newEmail;
+
+        [ObservableProperty]
+        private string currentPasswordForEmail;
+
         [ObservableProperty]
         private bool isBusy;
 
         public IAsyncRelayCommand LoadProfileCommand { get; }
         public IAsyncRelayCommand SaveProfileCommand { get; }
         public IAsyncRelayCommand ChangePasswordCommand { get; }
-
+        public IAsyncRelayCommand ChangeEmailCommand { get; } // Novo comando
 
         private async Task InitializeAsync()
         {
@@ -124,6 +133,25 @@ namespace WaterBillingMobileApp.ViewModels
         {
             if (IsBusy || _profileService == null) return;
 
+            // Validações adicionadas
+            if (string.IsNullOrWhiteSpace(CurrentPassword))
+            {
+                await Shell.Current.DisplayAlert("Error", "Please enter your current password.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewPassword) || NewPassword.Length < 6)
+            {
+                await Shell.Current.DisplayAlert("Error", "New password must be at least 6 characters long.", "OK");
+                return;
+            }
+
+            if (NewPassword != ConfirmPassword)
+            {
+                await Shell.Current.DisplayAlert("Error", "New password and confirmation don't match.", "OK");
+                return;
+            }
+
             try
             {
                 IsBusy = true;
@@ -137,9 +165,18 @@ namespace WaterBillingMobileApp.ViewModels
                 var success = await _profileService.UpdatePasswordAsync(passwordRequest);
 
                 if (success)
+                {
                     await Shell.Current.DisplayAlert("Success", "Password updated successfully.", "OK");
+
+                    // Limpar campos após sucesso
+                    CurrentPassword = string.Empty;
+                    NewPassword = string.Empty;
+                    ConfirmPassword = string.Empty;
+                }
                 else
-                    await Shell.Current.DisplayAlert("Error", "Failed to update password. Please check current password.", "OK");
+                {
+                    await Shell.Current.DisplayAlert("Error", "Failed to update password. Please check your current password.", "OK");
+                }
             }
             catch (Exception ex)
             {
@@ -151,5 +188,80 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        // Nova funcionalidade: Alterar Email
+        private async Task ChangeEmailAsync()
+        {
+            if (IsBusy || _profileService == null) return;
+
+            // Validações
+            if (string.IsNullOrWhiteSpace(NewEmail))
+            {
+                await Shell.Current.DisplayAlert("Error", "Please enter a new email address.", "OK");
+                return;
+            }
+
+            if (!IsValidEmail(NewEmail))
+            {
+                await Shell.Current.DisplayAlert("Error", "Please enter a valid email address.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(CurrentPasswordForEmail))
+            {
+                await Shell.Current.DisplayAlert("Error", "Please enter your current password for verification.", "OK");
+                return;
+            }
+
+            if (NewEmail.Equals(Email, StringComparison.OrdinalIgnoreCase))
+            {
+                await Shell.Current.DisplayAlert("Error", "The new email is the same as your current email.", "OK");
+                return;
+            }
+
+            try
+            {
+                IsBusy = true;
+
+                var emailRequest = new UpdateEmailRequest
+                {
+                    NewEmail = NewEmail,
+                    CurrentPassword = CurrentPasswordForEmail
+                };
+
+                await _profileService.UpdateEmailAsync(emailRequest);
+
+                await Shell.Current.DisplayAlert("Success", "Email updated successfully.", "OK");
+
+                // Atualizar o email exibido e limpar campos
+                Email = NewEmail;
+                NewEmail = string.Empty;
+                CurrentPasswordForEmail = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Error changing email: {ex.Message}", "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        // Método auxiliar para validar email
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
+
+
+

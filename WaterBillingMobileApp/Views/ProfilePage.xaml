@@ -39,6 +39,14 @@
             <Label Text="Confirm New Password" />
             <Entry Text="{Binding ConfirmPassword}" IsPassword="True" />
 
+            <BoxView HeightRequest="1" BackgroundColor="Gray" Margin="0,20,0,10"/>
+            <Label Text="Change Email" FontAttributes="Bold"/>
+            <Label Text="New Email"/>
+            <Entry Text="{Binding NewEmail}" Keyboard="Email"/>
+            <Label Text="Current Password (for verification)"/>
+            <Entry Text="{Binding CurrentPasswordForEmail}" IsPassword="True"/>
+            <Button Text="Update Email" Command="{Binding ChangeEmailCommand}"/>
+
             <Button Text="Update Password" 
                     Command="{Binding ChangePasswordCommand}" 
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />

@@ -1,0 +1,50 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             x:Class="WaterBillingMobileApp.Views.MeterReadingPage"
+             x:DataType="viewmodels:SubmitReadingViewModel"
+             Title="Submit Reading"
+             BackgroundColor="#F0F8FF">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+            <Border BackgroundColor="#512BD4" StrokeShape="RoundRectangle 20" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Submit Meter Reading" FontSize="22" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label Text="Record your current water meter reading" FontSize="16" TextColor="LightBlue" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 15" Padding="25">
+                <VerticalStackLayout Spacing="20">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Select Meter:" FontAttributes="Bold" FontSize="16" />
+                        <Border Stroke="#512BD4" BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="0">
+                            <Picker ItemsSource="{Binding Meters}" ItemDisplayBinding="{Binding Id}" SelectedItem="{Binding SelectedMeter}" Title="Choose your meter" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Current Reading (m3):" FontAttributes="Bold" FontSize="16" />
+                        <Border Stroke="#512BD4" BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="0">
+                            <Entry Text="{Binding Value}" Keyboard="Numeric" Placeholder="Enter current reading" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Reading Date:" FontAttributes="Bold" FontSize="16" />
+                        <Border Stroke="#512BD4" BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="5">
+                            <DatePicker Date="{Binding Date}" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <Button Text="Submit Reading" Command="{Binding SubmitCommand}" BackgroundColor="Green" TextColor="White" CornerRadius="15" HeightRequest="50" FontSize="18" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+            <Border BackgroundColor="LightYellow" StrokeShape="RoundRectangle 15" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Tips for Accurate Reading" FontSize="16" FontAttributes="Bold" TextColor="DarkGoldenrod" />
+                    <Label Text="- Read the numbers from left to right" />
+                    <Label Text="- Include all digits before the red numbers" />
+                    <Label Text="- Submit readings monthly for best results" />
+                    <Label Text="- Take a photo for your records" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,9 +1,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
              x:Class="WaterBillingMobileApp.Views.InvoicesPage"
              xmlns:dto="clr-namespace:WaterBillingMobileApp.DTO"
-             x:DataType="viewmodels:InvoicesViewModel"
              Title="Invoices">
 
     <StackLayout Padding="20" Spacing="10">
@@ -15,14 +13,23 @@
             <CollectionView ItemsSource="{Binding Invoices}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:InvoiceDTO">
-                        <Frame BorderColor="LightGray" CornerRadius="8" Padding="10" Margin="5">
+                        <Border Padding="10" Margin="5">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewInvoiceDetailCommand}"
+                                                      CommandParameter="{Binding}" />
+                            </Border.GestureRecognizers>
+
                             <VerticalStackLayout>
                                 <Label Text="{Binding Id, StringFormat='Invoice #: {0}'}" FontAttributes="Bold" />
                                 <Label Text="{Binding IssueDate, StringFormat='Date: {0:dd/MM/yyyy}'}" />
                                 <Label Text="{Binding TotalAmount, StringFormat='Total: {0:C}'}" />
                                 <Label Text="{Binding Status}" />
+                                <Label Text="Tap for details" 
+                                       FontSize="12" 
+                                       TextColor="Gray" 
+                                       HorizontalOptions="End" />
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

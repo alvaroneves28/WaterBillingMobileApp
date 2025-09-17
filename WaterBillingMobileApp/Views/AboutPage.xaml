@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WaterBillingMobileApp.Views.AboutPage"
+             Title="About">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <!-- App Icon and Title -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Image Source="appicon.svg" 
+                       HeightRequest="80" 
+                       WidthRequest="80"
+                       HorizontalOptions="Center" />
+                <Label Text="Water Billing App" 
+                       FontSize="24" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
+                <Label Text="Version 1.0" 
+                       FontSize="16" 
+                       TextColor="Gray"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <Frame BackgroundColor="LightGray" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="About This App" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="Water Billing Mobile App helps you manage your water consumption, view invoices, submit meter readings, and track your usage history. Stay connected with your water utility services anytime, anywhere."
+                           FontSize="14"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Features -->
+            <Frame BackgroundColor="#E3F2FD" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Key Features" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="- Submit meter readings" FontSize="14" />
+                    <Label Text="- View consumption history" FontSize="14" />
+                    <Label Text="- Access invoices and payment details" FontSize="14" />
+                    <Label Text="- Check current rates and tariffs" FontSize="14" />
+                    <Label Text="- Request new meter installation" FontSize="14" />
+                    <Label Text="- Manage your profile" FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Developer Info -->
+            <Frame BackgroundColor="#E8F5E8" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Developer Information" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="Developed by: Water Utility Solutions"
+                           FontSize="14" />
+                    <Label Text="Contact: support@waterutility.com"
+                           FontSize="14" />
+                    <Label Text="Website: www.waterutility.com"
+                           FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Technical Info -->
+            <Frame BackgroundColor="#FFF9E6" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Technical Information" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="App Version: 1.0"
+                           FontSize="14" />
+                    <Label Text="Built with: .NET MAUI"
+                           FontSize="14" />
+                    <Label Text="Compatible with: Android, iOS, Windows"
+                           FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Legal -->
+            <Frame BackgroundColor="#FFE6E6" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Legal" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="Copyright 2024 Water Utility Solutions. All rights reserved."
+                           FontSize="12"
+                           TextColor="DarkGray" />
+                    <Label Text="This app is licensed under the terms of service agreement."
+                           FontSize="12"
+                           TextColor="DarkGray" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Support Info -->
+            <Frame BackgroundColor="#F3E5F5" HasShadow="False" CornerRadius="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Need Help?" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <Label Text="If you have questions or need assistance, please contact our support team:"
+                           FontSize="14"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="Email: support@waterutility.com"
+                           FontSize="14"
+                           FontAttributes="Bold" 
+                           TextColor="#512BD4" />
+                    <Label Text="Phone: +1-800-WATER-01"
+                           FontSize="14"
+                           FontAttributes="Bold" 
+                           TextColor="#512BD4" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Thank you message -->
+            <Label Text="Thank you for using Water Billing App!" 
+                   FontSize="16" 
+                   FontAttributes="Italic"
+                   HorizontalOptions="Center"
+                   TextColor="#512BD4"
+                   Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

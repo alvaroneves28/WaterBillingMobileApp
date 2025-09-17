@@ -1,4 +1,4 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
              x:Class="WaterBillingMobileApp.Views.RatesAndStatusPage"
@@ -28,9 +28,9 @@
                     <DataTemplate>
                         <Frame BorderColor="Gray" CornerRadius="10" Padding="10">
                             <VerticalStackLayout>
-                                <Label Text="{Binding MinVolume, StringFormat='From {0} m³'}" />
-                                <Label Text="{Binding MaxVolume, StringFormat='To {0} m³'}" />
-                                <Label Text="{Binding PricePerCubicMeter, StringFormat='Price: {0:C} per m³'}" />
+                                <Label Text="{Binding MinVolume, StringFormat='From {0} m3'}" />
+                                <Label Text="{Binding MaxVolume, StringFormat='To {0} m3'}" />
+                                <Label Text="{Binding PricePerCubicMeter, StringFormat='Price: {0:C} per m3'}" />
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
@@ -40,3 +40,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

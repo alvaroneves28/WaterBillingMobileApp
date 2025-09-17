@@ -74,11 +74,22 @@ namespace WaterBillingMobileApp.Services
         }
 
         /// <summary>
-        /// Apaga o token (logout).
+        /// Apaga o token (logout) e limpa dados de notificações.
         /// </summary>
         public void Logout()
         {
             SecureStorage.Remove(TokenKey);
+
+            // Limpar dados de notificações
+            try
+            {
+                var notificationService = new NotificationService(this);
+                notificationService.ClearNotificationData();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao limpar notificações no logout: {ex.Message}");
+            }
         }
 
         /// <summary>
