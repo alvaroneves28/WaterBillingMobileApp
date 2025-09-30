@@ -3,6 +3,10 @@
        xmlns:views="clr-namespace:WaterBillingMobileApp.Views"
        xmlns:pages="clr-namespace:WaterBillingMobileApp"
        x:Class="WaterBillingMobileApp.AppShell">
+    
+    <ShellItem Title="Login" Route="LoginPage">
+        <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
+    </ShellItem>
 
     <!-- Dashboard / Home -->
     <ShellItem Title="Dashboard"

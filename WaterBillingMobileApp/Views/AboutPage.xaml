@@ -56,12 +56,14 @@
                     <Label Text="Developer Information" 
                            FontSize="18" 
                            FontAttributes="Bold" />
-                    <Label Text="Developed by: Water Utility Solutions"
+                    <Label Text="Developed by: Álvaro Neves"
                            FontSize="14" />
                     <Label Text="Contact: support@waterutility.com"
                            FontSize="14" />
                     <Label Text="Website: www.waterutility.com"
                            FontSize="14" />
+                    <Label Text="Date of creation: 17/09/2025"
+                             FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 

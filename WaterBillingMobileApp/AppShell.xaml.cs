@@ -9,23 +9,24 @@ public partial class AppShell : Shell
         InitializeComponent();
 
         // Registrar rotas
-        Routing.RegisterRoute(nameof(MeterReadingPage), typeof(Views.MeterReadingPage));
-        Routing.RegisterRoute(nameof(ConsumptionHistoryPage), typeof(Views.ConsumptionHistoryPage));
-        Routing.RegisterRoute(nameof(InvoicesPage), typeof(Views.InvoicesPage));
-        Routing.RegisterRoute(nameof(RatesAndStatusPage), typeof(Views.RatesAndStatusPage));
-        Routing.RegisterRoute(nameof(ProfilePage), typeof(Views.ProfilePage));
-        Routing.RegisterRoute(nameof(AboutPage), typeof(Views.AboutPage));
+        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(MeterReadingPage), typeof(MeterReadingPage));
+        Routing.RegisterRoute(nameof(ConsumptionHistoryPage), typeof(ConsumptionHistoryPage));
+        Routing.RegisterRoute(nameof(InvoicesPage), typeof(InvoicesPage));
+        Routing.RegisterRoute(nameof(RatesAndStatusPage), typeof(RatesAndStatusPage));
+        Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
+        Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
+        Routing.RegisterRoute(nameof(ResetPasswordPage), typeof(ResetPasswordPage));
+        Routing.RegisterRoute(nameof(ForgotPasswordPage), typeof(ForgotPasswordPage));
 
-        // Definir o BindingContext para os comandos
         BindingContext = this;
     }
 
-    // Comando para navegar para a página de pedido anónimo
     public Command GoToAnonymousRequestCommand => new Command(async () =>
     {
         try
         {
-            await Shell.Current.Navigation.PushAsync(new Views.AnonymousRequestPage());
+            await Shell.Current.Navigation.PushAsync(new AnonymousRequestPage());
         }
         catch (Exception ex)
         {

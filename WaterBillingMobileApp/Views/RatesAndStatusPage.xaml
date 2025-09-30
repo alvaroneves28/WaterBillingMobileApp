@@ -1,43 +1,248 @@
-﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:WaterBillingMobileApp.ViewModels"
+             xmlns:dto="clr-namespace:WaterBillingMobileApp.DTO"
              x:Class="WaterBillingMobileApp.Views.RatesAndStatusPage"
-             Title="Rates and Status">
+             x:DataType="viewmodels:RatesAndStatusViewModel"
+             Title="Rates and Status"
+             BackgroundColor="White">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+    <Grid>
+        <!-- Loading Overlay -->
+        <Border IsVisible="{Binding IsBusy}"
+                BackgroundColor="#80000000"
+                ZIndex="999">
+            <VerticalStackLayout HorizontalOptions="Center" 
+                               VerticalOptions="Center"
+                               Spacing="15">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                 Color="White"
+                                 WidthRequest="50"
+                                 HeightRequest="50" />
+                <Label Text="Loading data..."
+                       TextColor="White"
+                       FontSize="18"
+                       FontAttributes="Bold" />
+            </VerticalStackLayout>
+        </Border>
 
-            <Label Text="Meter Status" FontAttributes="Bold" FontSize="20" />
-            <CollectionView ItemsSource="{Binding Meters}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame BorderColor="Gray" CornerRadius="10" Padding="10">
-                            <VerticalStackLayout>
-                                <Label Text="{Binding InstallationAddress}" FontAttributes="Bold" />
-                                <Label Text="{Binding RequestDate, StringFormat='Requested on: {0:dd/MM/yyyy}'}" />
-                                <Label Text="{Binding Status}" TextColor="DarkGreen" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+        <!-- Main Content -->
+        <RefreshView IsRefreshing="{Binding IsBusy}"
+                     Command="{Binding LoadDataCommand}">
+            <ScrollView>
+                <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Label Text="Tariff Brackets" FontAttributes="Bold" FontSize="20" />
-            <CollectionView ItemsSource="{Binding Tariffs}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame BorderColor="Gray" CornerRadius="10" Padding="10">
-                            <VerticalStackLayout>
-                                <Label Text="{Binding MinVolume, StringFormat='From {0} m3'}" />
-                                <Label Text="{Binding MaxVolume, StringFormat='To {0} m3'}" />
-                                <Label Text="{Binding PricePerCubicMeter, StringFormat='Price: {0:C} per m3'}" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    <!-- Error Message -->
+                    <Border IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                            BackgroundColor="#FFEBEE"
+                            Stroke="Red"
+                            StrokeThickness="2"
+                            Padding="15"
+                            StrokeShape="RoundRectangle 10">
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="⚠️" 
+                                   FontSize="24"
+                                   VerticalOptions="Center" />
+                            <Label Text="{Binding ErrorMessage}"
+                                   TextColor="DarkRed"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="WordWrap"
+                                   HorizontalOptions="FillAndExpand" />
+                        </HorizontalStackLayout>
+                    </Border>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                    <!-- Meter Status Section -->
+                    <Border BackgroundColor="#E3F2FD"
+                            Stroke="#2196F3"
+                            StrokeThickness="2"
+                            Padding="15"
+                            StrokeShape="RoundRectangle 15">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Your Meters" 
+                                   FontAttributes="Bold" 
+                                   FontSize="20"
+                                   TextColor="#1976D2" />
+
+                            <!-- Meters List -->
+                            <CollectionView ItemsSource="{Binding Meters}"
+                                          IsVisible="{Binding HasMeters}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:MeterStatusDTO">
+                                        <Border BackgroundColor="White"
+                                                Stroke="#BBDEFB"
+                                                StrokeShape="RoundRectangle 10" 
+                                                Padding="15"
+                                                Margin="0,5">
+                                            <VerticalStackLayout Spacing="8">
+                                                <Label Text="{Binding Id, StringFormat='Meter ID: {0}'}" 
+                                                       FontAttributes="Bold"
+                                                       FontSize="16"
+                                                       TextColor="#1976D2" />
+                                                <Label Text="{Binding InstallationAddress, StringFormat='Address: {0}'}" 
+                                                       TextColor="Black"
+                                                       LineBreakMode="WordWrap" />
+                                                <Label Text="{Binding RequestDate, StringFormat='Installed: {0:dd/MM/yyyy}'}" 
+                                                       TextColor="Gray" />
+                                                <Border BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                                        Padding="8,4"
+                                                        StrokeShape="RoundRectangle 5"
+                                                        HorizontalOptions="Start">
+                                                    <Label Text="{Binding Status}" 
+                                                           TextColor="White"
+                                                           FontAttributes="Bold"
+                                                           FontSize="12" />
+                                                </Border>
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                            <!-- No Meters Message -->
+                            <Border IsVisible="{Binding HasMeters, Converter={StaticResource InverseBooleanConverter}}"
+                                    BackgroundColor="White"
+                                    Stroke="#BBDEFB"
+                                    Padding="20"
+                                    StrokeShape="RoundRectangle 10">
+                                <VerticalStackLayout Spacing="10">
+                                    <Label Text="ℹ️" 
+                                           FontSize="32"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="No Meters Found" 
+                                           FontAttributes="Bold"
+                                           FontSize="18"
+                                           HorizontalOptions="Center"
+                                           TextColor="#1976D2" />
+                                    <Label Text="You don't have any water meters registered yet. Contact support to request a meter installation."
+                                           HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="WordWrap"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Tariff Brackets Section -->
+                    <Border BackgroundColor="#E8F5E9"
+                            Stroke="#4CAF50"
+                            StrokeThickness="2"
+                            Padding="15"
+                            StrokeShape="RoundRectangle 15">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Current Tariff Brackets" 
+                                   FontAttributes="Bold" 
+                                   FontSize="20"
+                                   TextColor="#388E3C" />
+
+                            <Label Text="Water consumption is charged according to these brackets:"
+                                   FontSize="14"
+                                   TextColor="Gray" />
+
+                            <!-- Tariffs List -->
+                            <CollectionView ItemsSource="{Binding Tariffs}"
+                                          IsVisible="{Binding HasTariffs}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:TariffDTO">
+                                        <Border BackgroundColor="White"
+                                                Stroke="#C8E6C9"
+                                                StrokeShape="RoundRectangle 10" 
+                                                Padding="15"
+                                                Margin="0,5">
+                                            <Grid ColumnDefinitions="*,Auto" 
+                                                  RowDefinitions="Auto,Auto,Auto"
+                                                  ColumnSpacing="10"
+                                                  RowSpacing="5">
+
+                                                <Label Grid.Row="0" Grid.Column="0"
+                                                       Text="Volume Range" 
+                                                       FontAttributes="Bold"
+                                                       TextColor="#388E3C" />
+
+                                                <Label Grid.Row="1" Grid.Column="0"
+                                                       Text="{Binding MinVolume, StringFormat='From: {0:N0} m³'}"
+                                                       TextColor="Black" />
+
+                                                <Label Grid.Row="2" Grid.Column="0"
+                                                       Text="{Binding MaxVolume, StringFormat='To: {0:N0} m³'}"
+                                                       TextColor="Black" />
+
+                                                <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                                        BackgroundColor="#4CAF50"
+                                                        Padding="12"
+                                                        StrokeShape="RoundRectangle 8"
+                                                        VerticalOptions="Center">
+                                                    <VerticalStackLayout Spacing="2">
+                                                        <Label Text="{Binding PricePerCubicMeter, StringFormat='{0:C}'}" 
+                                                               TextColor="White"
+                                                               FontAttributes="Bold"
+                                                               FontSize="18"
+                                                               HorizontalTextAlignment="Center" />
+                                                        <Label Text="per m³" 
+                                                               TextColor="White"
+                                                               FontSize="12"
+                                                               HorizontalTextAlignment="Center" />
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                            <!-- No Tariffs Message -->
+                            <Border IsVisible="{Binding HasTariffs, Converter={StaticResource InverseBooleanConverter}}"
+                                    BackgroundColor="White"
+                                    Stroke="#C8E6C9"
+                                    Padding="20"
+                                    StrokeShape="RoundRectangle 10">
+                                <VerticalStackLayout Spacing="10">
+                                    <Label Text="⚠️" 
+                                           FontSize="32"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="No Tariffs Available" 
+                                           FontAttributes="Bold"
+                                           FontSize="18"
+                                           HorizontalOptions="Center"
+                                           TextColor="#388E3C" />
+                                    <Label Text="Unable to load current tariff information. Please try again later."
+                                           HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="WordWrap"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Info Box -->
+                            <Border BackgroundColor="#FFF9C4"
+                                    Stroke="#FBC02D"
+                                    Padding="12"
+                                    StrokeShape="RoundRectangle 8">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="💡" 
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Label Text="Higher consumption volumes are charged at higher rates. Try to conserve water to save money!"
+                                           TextColor="#F57F17"
+                                           FontSize="12"
+                                           VerticalOptions="Center"
+                                           LineBreakMode="WordWrap"
+                                           HorizontalOptions="FillAndExpand" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Pull to Refresh Hint -->
+                    <Label Text="Pull down to refresh"
+                           FontSize="12"
+                           TextColor="Gray"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,0" />
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
 </ContentPage>
-

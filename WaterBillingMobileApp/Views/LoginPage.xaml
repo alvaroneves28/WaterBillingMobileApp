@@ -8,7 +8,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
-           
+            <!-- Header -->
             <Border BackgroundColor="#512BD4" 
                     StrokeShape="RoundRectangle 25" 
                     Padding="30"
@@ -30,13 +30,13 @@
                 </VerticalStackLayout>
             </Border>
 
-            
+            <!-- Login Form -->
             <Border BackgroundColor="White" 
                     StrokeShape="RoundRectangle 20" 
                     Padding="25">
                 <VerticalStackLayout Spacing="20">
 
-                    
+                    <!-- Email -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Email Address" FontAttributes="Bold" />
                         <Border Stroke="#512BD4" 
@@ -45,11 +45,12 @@
                                 Padding="0">
                             <Entry Placeholder="Enter your email"
                                    Text="{Binding Email}"
-                                   Keyboard="Email" />
+                                   Keyboard="Email"
+                                   IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    
+                    <!-- Password -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Password" FontAttributes="Bold" />
                         <Border Stroke="#512BD4" 
@@ -58,33 +59,59 @@
                                 Padding="0">
                             <Entry Placeholder="Enter your password"
                                    Text="{Binding Password}"
-                                   IsPassword="True" />
+                                   IsPassword="True"
+                                   IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    
+                    <!-- Forgot Password -->
                     <Button Text="Forgot Password?" 
                             Command="{Binding ForgotPasswordCommand}"
                             BackgroundColor="Transparent"
                             TextColor="#512BD4"
                             FontSize="14"
-                            HorizontalOptions="End" />
+                            HorizontalOptions="End"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
 
-                    <Button Text="Login"
-                            Command="{Binding LoginCommand}"
-                            BackgroundColor="#512BD4"
-                            TextColor="White"
-                            CornerRadius="15"
-                            HeightRequest="50"
-                            FontSize="18"
-                            FontAttributes="Bold" />
+                    <!-- Login Button with Loading -->
+                    <Grid>
+                        <Button Text="Login"
+                                Command="{Binding LoginCommand}"
+                                BackgroundColor="#512BD4"
+                                TextColor="White"
+                                CornerRadius="15"
+                                HeightRequest="50"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                IsVisible="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+
+                        <Border BackgroundColor="#512BD4"
+                                StrokeShape="RoundRectangle 15"
+                                HeightRequest="50"
+                                IsVisible="{Binding IsBusy}">
+                            <HorizontalStackLayout HorizontalOptions="Center" 
+                                                   VerticalOptions="Center"
+                                                   Spacing="10">
+                                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                                   Color="White"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24" />
+                                <Label Text="Logging in..."
+                                       TextColor="White"
+                                       FontSize="18"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
 
                 </VerticalStackLayout>
             </Border>
 
+            <!-- New Customer Section -->
             <Border BackgroundColor="LightGreen" 
                     StrokeShape="RoundRectangle 15" 
-                    Padding="20">
+                    Padding="20"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
                 <VerticalStackLayout Spacing="15">
                     <Label Text="New Customer?" 
                            FontSize="18"

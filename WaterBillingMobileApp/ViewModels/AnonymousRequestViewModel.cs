@@ -19,7 +19,9 @@ namespace WaterBillingMobileApp.ViewModels
             BackToLoginCommand = new AsyncRelayCommand(BackToLoginAsync);
 
             InitializeHttpClient();
-            _ = LoadTariffsAsync(); // Carregar tarifas ao inicializar
+
+            // Carregar tarifas ao inicializar
+            _ = LoadTariffsAsync();
         }
 
         [ObservableProperty]
@@ -52,13 +54,20 @@ namespace WaterBillingMobileApp.ViewModels
 
         private void InitializeHttpClient()
         {
-            var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+            };
 
             _httpClient = new HttpClient(handler)
             {
-                BaseAddress = new Uri(BaseUrl)
+                BaseAddress = new Uri(BaseUrl),
+                Timeout = TimeSpan.FromSeconds(30)
             };
+
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private async Task SubmitRequestAsync()
@@ -68,31 +77,31 @@ namespace WaterBillingMobileApp.ViewModels
             // Validações
             if (string.IsNullOrWhiteSpace(FullName))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter your full name.", "OK");
+                await ShowAlert("Error", "Please enter your full name.", "OK");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(Email))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter your email address.", "OK");
+                await ShowAlert("Error", "Please enter your email address.", "OK");
                 return;
             }
 
             if (!IsValidEmail(Email))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter a valid email address.", "OK");
+                await ShowAlert("Error", "Please enter a valid email address.", "OK");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter your phone number.", "OK");
+                await ShowAlert("Error", "Please enter your phone number.", "OK");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(InstallationAddress))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter the installation address.", "OK");
+                await ShowAlert("Error", "Please enter the installation address.", "OK");
                 return;
             }
 
@@ -100,21 +109,38 @@ namespace WaterBillingMobileApp.ViewModels
             {
                 IsBusy = true;
 
-                var request = new MeterRequestDTO
+                System.Diagnostics.Debug.WriteLine("=== SUBMITTING METER REQUEST ===");
+                System.Diagnostics.Debug.WriteLine($"Name: {FullName}");
+                System.Diagnostics.Debug.WriteLine($"Email: {Email}");
+
+                // DTO que corresponde ao que a API espera (AnonymousMeterRequestDTO)
+                var request = new
                 {
-                    FullName = FullName,
+                    Name = FullName,
                     Email = Email,
-                    PhoneNumber = PhoneNumber,
-                    InstallationAddress = InstallationAddress,
-                    Comments = Comments ?? string.Empty,
-                    RequestDate = DateTime.Now
+                    Address = InstallationAddress,
+                    NIF = "000000000", // Temporário - pode adicionar campo no form se necessário
+                    PhoneNumber = PhoneNumber
                 };
 
-                var response = await _httpClient.PostAsJsonAsync("Anonymous/meter-request", request);
+                var json = JsonSerializer.Serialize(request);
+                System.Diagnostics.Debug.WriteLine($"JSON: {json}");
+
+                var content = new System.Net.Http.StringContent(
+                    json,
+                    System.Text.Encoding.UTF8,
+                    "application/json");
+
+                // Endpoint correto baseado no seu CustomerController
+                var response = await _httpClient.PostAsync("Customer/meter-requests/anonymous", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"Response Status: {response.StatusCode}");
+                System.Diagnostics.Debug.WriteLine($"Response Content: {responseContent}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    await Shell.Current.DisplayAlert(
+                    await ShowAlert(
                         "Success",
                         "Your meter request has been submitted successfully! We will review your request and contact you soon via email or phone.",
                         "OK");
@@ -124,28 +150,42 @@ namespace WaterBillingMobileApp.ViewModels
                 }
                 else
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    string errorMessage = "Failed to submit request. Please try again.";
+                    var errorMessage = "Failed to submit request. Please try again.";
 
                     try
                     {
-                        var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorContent);
+                        var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
                         if (errorResponse != null && errorResponse.ContainsKey("message"))
                         {
                             errorMessage = errorResponse["message"];
                         }
+                        else if (!string.IsNullOrWhiteSpace(responseContent))
+                        {
+                            errorMessage = responseContent;
+                        }
                     }
                     catch
                     {
-                        // Usar mensagem padrão
+                        // Usar mensagem padrão ou resposta bruta
+                        if (!string.IsNullOrWhiteSpace(responseContent))
+                        {
+                            errorMessage = responseContent;
+                        }
                     }
 
-                    await Shell.Current.DisplayAlert("Error", errorMessage, "OK");
+                    await ShowAlert("Error", errorMessage, "OK");
                 }
+            }
+            catch (System.Net.Http.HttpRequestException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"HTTP Error: {ex.Message}");
+                await ShowAlert("Error", "Network error: Unable to connect to the server. Please check your connection.", "OK");
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error", $"Network error: {ex.Message}", "OK");
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                await ShowAlert("Error", $"An error occurred: {ex.Message}", "OK");
             }
             finally
             {
@@ -161,16 +201,26 @@ namespace WaterBillingMobileApp.ViewModels
             {
                 IsLoadingTariffs = true;
 
-                var tariffs = await _httpClient.GetFromJsonAsync<List<TariffDTO>>("Anonymous/tariff-brackets");
+                System.Diagnostics.Debug.WriteLine("Loading tariffs...");
 
-                if (tariffs != null)
+                // Usar o endpoint correto para tarifas públicas
+                var tariffs = await _httpClient.GetFromJsonAsync<List<TariffDTO>>("Customer/tariff-brackets");
+
+                if (tariffs != null && tariffs.Any())
                 {
+                    System.Diagnostics.Debug.WriteLine($"Loaded {tariffs.Count} tariffs");
                     PublicTariffs = new ObservableCollection<TariffDTO>(tariffs);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No tariffs found");
+                    PublicTariffs = new ObservableCollection<TariffDTO>();
                 }
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error", $"Failed to load tariffs: {ex.Message}", "OK");
+                System.Diagnostics.Debug.WriteLine($"Error loading tariffs: {ex.Message}");
+                await ShowAlert("Error", $"Failed to load tariffs: {ex.Message}", "OK");
             }
             finally
             {
@@ -182,11 +232,34 @@ namespace WaterBillingMobileApp.ViewModels
         {
             try
             {
-                await Shell.Current.Navigation.PopAsync();
+                // Se foi aberto como modal, fechar modal
+                var currentPage = Application.Current?.MainPage;
+
+                if (currentPage is NavigationPage navPage)
+                {
+                    await navPage.Navigation.PopModalAsync();
+                }
+                else if (currentPage != null)
+                {
+                    await currentPage.Navigation.PopModalAsync();
+                }
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error", $"Navigation error: {ex.Message}", "OK");
+                System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.Message}");
+                // Tentar alternativa
+                try
+                {
+                    if (Application.Current?.MainPage != null)
+                    {
+                        await Application.Current.MainPage.Navigation.PopModalAsync();
+                    }
+                }
+                catch
+                {
+                    // Se nada funcionar, pelo menos não crashar
+                    System.Diagnostics.Debug.WriteLine("Could not navigate back");
+                }
             }
         }
 
@@ -209,6 +282,25 @@ namespace WaterBillingMobileApp.ViewModels
             catch
             {
                 return false;
+            }
+        }
+
+        private async Task ShowAlert(string title, string message, string button)
+        {
+            try
+            {
+                if (Application.Current?.MainPage != null)
+                {
+                    await Application.Current.MainPage.DisplayAlert(title, message, button);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Alert: {title} - {message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ShowAlert error: {ex.Message}");
             }
         }
     }

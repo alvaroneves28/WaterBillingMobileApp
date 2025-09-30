@@ -20,6 +20,7 @@ namespace WaterBillingMobileApp
                 });
 
             // Services
+            builder.Services.AddSingleton<ResetPasswordService>();
             builder.Services.AddSingleton<NotificationService>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<ProfileService>();
@@ -34,6 +35,7 @@ namespace WaterBillingMobileApp
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<ProfileViewModel>();
             builder.Services.AddTransient<RatesAndStatusViewModel>();
+            builder.Services.AddTransient<ResetPasswordViewModel>();
 
 
             // Pages
@@ -47,6 +49,7 @@ namespace WaterBillingMobileApp
             builder.Services.AddTransient<MeterReadingPage>();
             builder.Services.AddTransient<ProfilePage>();
             builder.Services.AddTransient<RatesAndStatusPage>();
+            builder.Services.AddTransient<ResetPasswordPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();

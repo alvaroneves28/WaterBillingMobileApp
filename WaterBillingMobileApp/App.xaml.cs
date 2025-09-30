@@ -1,41 +1,49 @@
-﻿using WaterBillingMobileApp.Services;
+﻿using System.Text;
+using WaterBillingMobileApp.Services;
 using WaterBillingMobileApp.Views;
 
 namespace WaterBillingMobileApp
 {
+
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
-
-            // Inicializar serviço de notificações
-            InitializeNotificationService();
+            // MainPage deve ser sempre AppShell
+            MainPage = new AppShell();
         }
 
-        private void InitializeNotificationService()
+        public void HandleDeepLink(string url)
         {
             try
             {
-                // Obter o serviço através do DI
-                var authService = Handler.MauiContext?.Services.GetService<AuthService>();
-                if (authService != null)
+                var uri = new Uri(url);
+                if (uri.Host == "reset-password")
                 {
-                    var notificationService = new NotificationService(authService);
+                    var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+                    var token = query["token"];
+                    var email = query["email"];
 
-                    // Verificar novas faturas quando a app inicia
-                    _ = notificationService.CheckOnAppStartAsync();
+                    // Guardar token e email no serviço
+                    var service = (ResetPasswordService)App.Current.Handler.MauiContext.Services.GetService(typeof(ResetPasswordService));
+                    service.Token = token;
+                    service.Email = email;
 
-                    // Iniciar verificações periódicas
-                    notificationService.StartPeriodicCheck();
+                    // Navegar apenas para a página sem parâmetros
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        if (Shell.Current != null)
+                            await Shell.Current.GoToAsync($"/{nameof(ResetPasswordPage)}");
+                    });
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erro ao inicializar NotificationService: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error handling deep link: {ex.Message}");
             }
         }
+
     }
 }
