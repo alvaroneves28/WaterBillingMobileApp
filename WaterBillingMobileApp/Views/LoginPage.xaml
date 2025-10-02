@@ -8,7 +8,6 @@
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
-            <!-- Header -->
             <Border BackgroundColor="#512BD4" 
                     StrokeShape="RoundRectangle 25" 
                     Padding="30"
@@ -30,13 +29,11 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Login Form -->
             <Border BackgroundColor="White" 
                     StrokeShape="RoundRectangle 20" 
                     Padding="25">
                 <VerticalStackLayout Spacing="20">
 
-                    <!-- Email -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Email Address" FontAttributes="Bold" />
                         <Border Stroke="#512BD4" 
@@ -49,8 +46,7 @@
                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                         </Border>
                     </VerticalStackLayout>
-
-                    <!-- Password -->
+                    
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Password" FontAttributes="Bold" />
                         <Border Stroke="#512BD4" 
@@ -64,7 +60,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Forgot Password -->
                     <Button Text="Forgot Password?" 
                             Command="{Binding ForgotPasswordCommand}"
                             BackgroundColor="Transparent"
@@ -73,7 +68,6 @@
                             HorizontalOptions="End"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
 
-                    <!-- Login Button with Loading -->
                     <Grid>
                         <Button Text="Login"
                                 Command="{Binding LoginCommand}"
@@ -107,7 +101,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- New Customer Section -->
             <Border BackgroundColor="LightGreen" 
                     StrokeShape="RoundRectangle 15" 
                     Padding="20"
@@ -133,7 +126,6 @@
                             HeightRequest="45" />
                 </VerticalStackLayout>
             </Border>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -8,56 +8,48 @@
         <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
     </ShellItem>
 
-    <!-- Dashboard / Home -->
     <ShellItem Title="Dashboard"
                Icon="home.png"
                Route="MainPage">
         <ShellContent ContentTemplate="{DataTemplate pages:MainPage}" />
     </ShellItem>
 
-    <!--Submit Meter Reading-->
     <ShellItem Title="Submit Reading"
                Icon="reading.png"
                Route="SubmitReadingPage">
         <ShellContent ContentTemplate="{DataTemplate views:MeterReadingPage}" />
     </ShellItem>
-
-    <!-- Consumption History -->
+    
     <ShellItem Title="Consumption History"
                Icon="history.png"
                Route="ConsumptionHistoryPage">
         <ShellContent ContentTemplate="{DataTemplate views:ConsumptionHistoryPage}" />
     </ShellItem>
 
-    <!-- Invoices -->
     <ShellItem Title="Invoices"
                Icon="invoice.png"
                Route="InvoicesPage">
         <ShellContent ContentTemplate="{DataTemplate views:InvoicesPage}" />
     </ShellItem>
 
-    <!-- Rates and Meter Request Status -->
     <ShellItem Title="Rates and Status"
                Icon="rates.png"
                Route="RatesAndStatusPage">
         <ShellContent ContentTemplate="{DataTemplate views:RatesAndStatusPage}" />
     </ShellItem>
 
-    <!-- Profile -->
     <ShellItem Title="Profile"
                Icon="profile.png"
                Route="ProfilePage">
         <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
     </ShellItem>
 
-    <!-- About Page -->
     <ShellItem Title="About"
                Icon="info.png"
                Route="AboutPage">
         <ShellContent ContentTemplate="{DataTemplate views:AboutPage}" />
     </ShellItem>
 
-    <!-- Menu Item para utilizadores anonimos -->
     <MenuItem Text="Request Meter (Anonymous)" 
               IconImageSource="meter_request.png"
               Command="{Binding GoToAnonymousRequestCommand}" />

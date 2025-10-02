@@ -9,7 +9,6 @@
              BackgroundColor="White">
 
     <Grid>
-        <!-- Loading Overlay -->
         <Border IsVisible="{Binding IsBusy}"
                 BackgroundColor="#80000000"
                 ZIndex="999">
@@ -26,14 +25,12 @@
                        FontAttributes="Bold" />
             </VerticalStackLayout>
         </Border>
-
-        <!-- Main Content -->
+        
         <RefreshView IsRefreshing="{Binding IsBusy}"
                      Command="{Binding LoadDataCommand}">
             <ScrollView>
                 <VerticalStackLayout Padding="20" Spacing="20">
 
-                    <!-- Error Message -->
                     <Border IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
                             BackgroundColor="#FFEBEE"
                             Stroke="Red"
@@ -52,7 +49,6 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- Meter Status Section -->
                     <Border BackgroundColor="#E3F2FD"
                             Stroke="#2196F3"
                             StrokeThickness="2"
@@ -64,7 +60,6 @@
                                    FontSize="20"
                                    TextColor="#1976D2" />
 
-                            <!-- Meters List -->
                             <CollectionView ItemsSource="{Binding Meters}"
                                           IsVisible="{Binding HasMeters}">
                                 <CollectionView.ItemTemplate>
@@ -99,7 +94,6 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
 
-                            <!-- No Meters Message -->
                             <Border IsVisible="{Binding HasMeters, Converter={StaticResource InverseBooleanConverter}}"
                                     BackgroundColor="White"
                                     Stroke="#BBDEFB"
@@ -124,7 +118,6 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Tariff Brackets Section -->
                     <Border BackgroundColor="#E8F5E9"
                             Stroke="#4CAF50"
                             StrokeThickness="2"
@@ -140,7 +133,6 @@
                                    FontSize="14"
                                    TextColor="Gray" />
 
-                            <!-- Tariffs List -->
                             <CollectionView ItemsSource="{Binding Tariffs}"
                                           IsVisible="{Binding HasTariffs}">
                                 <CollectionView.ItemTemplate>
@@ -191,7 +183,6 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
 
-                            <!-- No Tariffs Message -->
                             <Border IsVisible="{Binding HasTariffs, Converter={StaticResource InverseBooleanConverter}}"
                                     BackgroundColor="White"
                                     Stroke="#C8E6C9"
@@ -214,7 +205,6 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Info Box -->
                             <Border BackgroundColor="#FFF9C4"
                                     Stroke="#FBC02D"
                                     Padding="12"
@@ -234,7 +224,6 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Pull to Refresh Hint -->
                     <Label Text="Pull down to refresh"
                            FontSize="12"
                            TextColor="Gray"

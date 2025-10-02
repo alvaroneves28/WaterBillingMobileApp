@@ -8,36 +8,32 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
-
-            <!-- No Quick Overview, adiciona um indicador -->
             <Border BackgroundColor="WhiteSmoke" 
                     StrokeShape="RoundRectangle 15" 
                     Padding="20">
                 <VerticalStackLayout Spacing="15">
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
-                   Text="Quick Overview" 
-                   FontSize="18" 
-                   FontAttributes="Bold"
-                   TextColor="#512BD4"
-                   HorizontalOptions="Center" />
+                               Text="Quick Overview" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="#512BD4"
+                               HorizontalOptions="Center" />
 
-                        <!-- Indicador de novas faturas -->
                         <Border Grid.Column="1"
-                    IsVisible="{Binding HasNewInvoices}"
-                    BackgroundColor="Red"
-                    StrokeShape="RoundRectangle 10"
-                    WidthRequest="20"
-                    HeightRequest="20">
+                                IsVisible="{Binding HasNewInvoices}"
+                                BackgroundColor="Red"
+                                StrokeShape="RoundRectangle 10"
+                                WidthRequest="20"
+                                HeightRequest="20">
                             <Label Text="{Binding NewInvoicesCount}" 
-                       TextColor="White" 
-                       FontSize="10"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center" />
+                                   TextColor="White" 
+                                   FontSize="10"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
                         </Border>
                     </Grid>
 
-                    <!-- Resto do conteúdo -->
                 </VerticalStackLayout>
             </Border>
 
@@ -171,7 +167,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                
+
                 <Border Grid.Row="2" Grid.Column="1" 
                         BackgroundColor="LightSteelBlue" 
                         StrokeShape="RoundRectangle 15">
@@ -191,9 +187,7 @@
                                HorizontalTextAlignment="Center" />
                     </VerticalStackLayout>
                 </Border>
-
             </Grid>
-
 
             <Border BackgroundColor="WhiteSmoke" 
                     Stroke="#512BD4"

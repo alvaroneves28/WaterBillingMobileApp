@@ -7,8 +7,17 @@ using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp
 {
+    /// <summary>
+    /// Main program class for configuring and building the MAUI application.
+    /// Handles dependency injection registration for services, ViewModels, and pages.
+    /// </summary>
     public static class MauiProgram
     {
+        /// <summary>
+        /// Creates and configures the MAUI application.
+        /// Registers all services, ViewModels, and pages in the dependency injection container.
+        /// </summary>
+        /// <returns>A configured <see cref="MauiApp"/> instance ready to run.</returns>
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -20,12 +29,12 @@ namespace WaterBillingMobileApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Services com interfaces
+            // Register services with their interfaces
             builder.Services.AddSingleton<ResetPasswordService>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<INotificationService, NotificationService>();
 
-            // ProfileService precisa de HttpClient, então registre assim:
+            // ProfileService requires HttpClient, so register with factory pattern
             builder.Services.AddTransient<IProfileService>(sp =>
             {
                 var authService = sp.GetRequiredService<IAuthService>();
@@ -33,7 +42,7 @@ namespace WaterBillingMobileApp
                 return new ProfileService(httpClient);
             });
 
-            // ViewModels
+            // Register ViewModels as transient (new instance per request)
             builder.Services.AddTransient<SubmitReadingViewModel>();
             builder.Services.AddTransient<AnonymousRequestViewModel>();
             builder.Services.AddTransient<ConsumptionHistoryViewModel>();
@@ -45,8 +54,7 @@ namespace WaterBillingMobileApp
             builder.Services.AddTransient<ResetPasswordViewModel>();
             builder.Services.AddTransient<AboutViewModel>();
 
-
-            // Pages
+            // Register Pages as transient (new instance per navigation)
             builder.Services.AddTransient<AboutPage>();
             builder.Services.AddTransient<AnonymousRequestPage>();
             builder.Services.AddTransient<ConsumptionHistoryPage>();
@@ -60,6 +68,7 @@ namespace WaterBillingMobileApp
             builder.Services.AddTransient<ResetPasswordPage>();
 
 #if DEBUG
+            // Enable debug logging in development builds
             builder.Logging.AddDebug();
 #endif
             return builder.Build();

@@ -7,7 +7,6 @@
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
 
-            <!-- App Icon and Title -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
                 <Image Source="appicon.svg" 
                        HeightRequest="80" 
@@ -23,7 +22,6 @@
                        HorizontalOptions="Center" />
             </VerticalStackLayout>
 
-            <!-- Description -->
             <Frame BackgroundColor="LightGray" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="About This App" 
@@ -35,7 +33,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Features -->
             <Frame BackgroundColor="#E3F2FD" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Key Features" 
@@ -50,7 +47,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Developer Info -->
             <Frame BackgroundColor="#E8F5E8" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Developer Information" 
@@ -66,8 +62,7 @@
                              FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
-
-            <!-- Technical Info -->
+            
             <Frame BackgroundColor="#FFF9E6" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Technical Information" 
@@ -82,7 +77,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Legal -->
             <Frame BackgroundColor="#FFE6E6" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Legal" 
@@ -97,7 +91,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Support Info -->
             <Frame BackgroundColor="#F3E5F5" HasShadow="False" CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Need Help?" 
@@ -117,7 +110,6 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Thank you message -->
             <Label Text="Thank you for using Water Billing App!" 
                    FontSize="16" 
                    FontAttributes="Italic"

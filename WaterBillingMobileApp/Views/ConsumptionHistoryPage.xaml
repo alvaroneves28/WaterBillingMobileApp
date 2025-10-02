@@ -26,8 +26,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-
-
     </StackLayout>
 </ContentPage>
 

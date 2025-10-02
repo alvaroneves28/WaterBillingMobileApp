@@ -1,57 +1,99 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
-using WaterBillingMobileApp.Services;
-using System.Net.Http.Headers;
 using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the Rates and Status page.
+    /// Displays water tariff brackets and meter installation request statuses.
+    /// Handles both authenticated (meter status) and public (tariffs) data.
+    /// Implements the MVVM pattern using CommunityToolkit.Mvvm.
+    /// </summary>
     public partial class RatesAndStatusViewModel : ObservableObject
     {
+        /// <summary>
+        /// Authenticated HTTP client for making API requests.
+        /// </summary>
         private HttpClient _httpClient;
 
+        /// <summary>
+        /// Gets or sets the collection of meter installation requests and their statuses.
+        /// </summary>
         [ObservableProperty]
         private ObservableCollection<MeterStatusDTO> meters = new();
 
+        /// <summary>
+        /// Gets or sets the collection of water tariff brackets.
+        /// </summary>
         [ObservableProperty]
         private ObservableCollection<TariffDTO> tariffs = new();
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a data loading operation is in progress.
+        /// </summary>
         [ObservableProperty]
         private bool isBusy;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the user has any meters.
+        /// Used to show/hide the "no meters" message.
+        /// </summary>
         [ObservableProperty]
         private bool hasMeters;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether tariff data was loaded successfully.
+        /// Used to show/hide the "no tariffs" message.
+        /// </summary>
         [ObservableProperty]
         private bool hasTariffs;
 
+        /// <summary>
+        /// Gets or sets an error message to display when data loading fails.
+        /// </summary>
         [ObservableProperty]
         private string errorMessage;
 
+        /// <summary>
+        /// Gets the command to reload all data (meters and tariffs).
+        /// </summary>
         public IAsyncRelayCommand LoadDataCommand { get; }
 
+        /// <summary>
+        /// Authentication service for creating authenticated HTTP clients.
+        /// </summary>
         private readonly IAuthService _authService;
-        private readonly INavigation _navigation;
 
-        public RatesAndStatusViewModel(IAuthService authService, INavigation navigation)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RatesAndStatusViewModel"/> class.
+        /// Sets up commands and initiates asynchronous data loading.
+        /// </summary>
+        /// <param name="authService">The authentication service.</param>
+        /// <param name="navigation">The navigation service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when authService or navigation is null.</exception>
+        public RatesAndStatusViewModel(IAuthService authService)
         {
             _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-            _navigation = navigation ?? throw new ArgumentNullException(nameof(navigation));
-
             LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
 
-            // Inicializar de forma assíncrona
+            // Initialize asynchronously
             _ = InitializeAsync();
         }
 
+        /// <summary>
+        /// Initializes the authenticated HTTP client and loads initial data.
+        /// Displays an error alert if authentication fails.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task InitializeAsync()
         {
             try
             {
-                // CORRIGIDO: underscore em vez de asterisco
                 _httpClient = await _authService.CreateAuthenticatedClientAsync();
                 await LoadDataAsync();
             }
@@ -63,6 +105,11 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Loads both meter status data and tariff data.
+        /// Clears any previous error messages before loading.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadDataAsync()
         {
             if (IsBusy)
@@ -73,10 +120,10 @@ namespace WaterBillingMobileApp.ViewModels
                 IsBusy = true;
                 ErrorMessage = string.Empty;
 
-                // Carregar Meters (autenticado)
+                // Load meters (authenticated)
                 await LoadMetersAsync();
 
-                // Carregar Tariffs (público - não requer autenticação)
+                // Load tariffs (public - no authentication required)
                 await LoadTariffsAsync();
             }
             catch (Exception ex)
@@ -91,6 +138,11 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Loads meter status data for the authenticated user.
+        /// Displays warnings if meters cannot be loaded but handles "not found" gracefully.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadMetersAsync()
         {
             try
@@ -127,7 +179,7 @@ namespace WaterBillingMobileApp.ViewModels
 
                     HasMeters = false;
 
-                    // Se não houver meters, não é necessariamente um erro crítico
+                    // Not having meters is not necessarily a critical error
                     if (metersResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
                         System.Diagnostics.Debug.WriteLine("No meters available for this user");
@@ -143,10 +195,15 @@ namespace WaterBillingMobileApp.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"Exception loading meters: {ex.Message}");
                 HasMeters = false;
-                throw; // Re-throw para ser capturado pelo LoadDataAsync
+                throw; // Re-throw to be caught by LoadDataAsync
             }
         }
 
+        /// <summary>
+        /// Loads publicly available tariff data.
+        /// Creates a new unauthenticated HTTP client for this public endpoint.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadTariffsAsync()
         {
             HttpClient anonClient = null;
@@ -202,7 +259,7 @@ namespace WaterBillingMobileApp.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"Exception loading tariffs: {ex.Message}");
                 HasTariffs = false;
-                throw; // Re-throw para ser capturado pelo LoadDataAsync
+                throw; // Re-throw to be caught by LoadDataAsync
             }
             finally
             {
@@ -210,6 +267,13 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Displays an alert dialog with the specified title, message, and button text.
+        /// </summary>
+        /// <param name="title">The title of the alert.</param>
+        /// <param name="message">The message content.</param>
+        /// <param name="button">The button text.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task ShowAlert(string title, string message, string button)
         {
             try

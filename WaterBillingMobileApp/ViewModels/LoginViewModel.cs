@@ -5,10 +5,22 @@ using WaterBillingMobileApp.Services;
 
 namespace WaterBillingMobileApp.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the Login page.
+    /// Handles user authentication, credential validation, and navigation to other authentication-related pages.
+    /// Implements INotifyPropertyChanged for property change notifications.
+    /// </summary>
     public class LoginViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Authentication service for handling login operations and token management.
+        /// </summary>
         private readonly AuthService _authService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginViewModel"/> class.
+        /// Sets up commands for login, password recovery, and meter request navigation.
+        /// </summary>
         public LoginViewModel()
         {
             _authService = new AuthService();
@@ -17,7 +29,14 @@ namespace WaterBillingMobileApp.ViewModel
             RequestMeterCommand = new Command(async () => await NavigateToAnonymousRequestAsync());
         }
 
+        /// <summary>
+        /// Backing field for the Email property.
+        /// </summary>
         private string _email;
+
+        /// <summary>
+        /// Gets or sets the user's email address for authentication.
+        /// </summary>
         public string Email
         {
             get => _email;
@@ -29,7 +48,14 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Backing field for the Password property.
+        /// </summary>
         private string _password;
+
+        /// <summary>
+        /// Gets or sets the user's password for authentication.
+        /// </summary>
         public string Password
         {
             get => _password;
@@ -41,7 +67,15 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Backing field for the IsBusy property.
+        /// </summary>
         private bool _isBusy;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a login operation is in progress.
+        /// Used to disable UI elements during authentication.
+        /// </summary>
         public bool IsBusy
         {
             get => _isBusy;
@@ -53,10 +87,27 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets the command to perform user login.
+        /// </summary>
         public ICommand LoginCommand { get; }
+
+        /// <summary>
+        /// Gets the command to navigate to the forgot password page.
+        /// </summary>
         public ICommand ForgotPasswordCommand { get; }
+
+        /// <summary>
+        /// Gets the command to navigate to the anonymous meter request page.
+        /// </summary>
         public ICommand RequestMeterCommand { get; }
 
+        /// <summary>
+        /// Performs user login with validation and error handling.
+        /// Validates email format and required fields before making API call.
+        /// Stores authentication token securely upon successful login.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoginAsync()
         {
             if (IsBusy) return;
@@ -65,20 +116,21 @@ namespace WaterBillingMobileApp.ViewModel
             {
                 IsBusy = true;
 
-                // Validações
+                // Validate email is not empty
                 if (string.IsNullOrWhiteSpace(Email))
                 {
                     await ShowAlert("Email Required", "Please enter your email address.", "OK");
                     return;
                 }
 
+                // Validate password is not empty
                 if (string.IsNullOrWhiteSpace(Password))
                 {
                     await ShowAlert("Password Required", "Please enter your password.", "OK");
                     return;
                 }
 
-                // Validar formato do email
+                // Validate email format
                 if (!IsValidEmail(Email))
                 {
                     await ShowAlert("Invalid Email", "Please enter a valid email address.", "OK");
@@ -113,7 +165,7 @@ namespace WaterBillingMobileApp.ViewModel
                 System.Diagnostics.Debug.WriteLine($"Login exception: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
 
-                // Mensagens de erro específicas
+                // Specific error messages based on exception content
                 string errorMessage = "Unable to login. Please try again.";
                 string errorTitle = "Login Error";
 
@@ -150,6 +202,11 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Validates an email address format using MailAddress parsing.
+        /// </summary>
+        /// <param name="email">The email address to validate.</param>
+        /// <returns>True if the email format is valid, false otherwise.</returns>
         private bool IsValidEmail(string email)
         {
             try
@@ -163,6 +220,11 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Navigates to the main application page after successful login.
+        /// Ensures navigation occurs on the main UI thread.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task NavigateToMainPage()
         {
             try
@@ -191,21 +253,26 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Navigates to the anonymous meter request page.
+        /// Handles both modal and standard navigation depending on current page structure.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task NavigateToAnonymousRequestAsync()
         {
             try
             {
-                // Verificar qual é a página atual
+                // Check current page type
                 var currentPage = Application.Current?.MainPage;
 
                 if (currentPage is NavigationPage navPage)
                 {
-                    // Se já estiver em NavigationPage, usar a navegação normal
+                    // Use standard navigation if already in NavigationPage
                     await navPage.Navigation.PushAsync(new WaterBillingMobileApp.Views.AnonymousRequestPage());
                 }
                 else if (currentPage != null)
                 {
-                    // Se não estiver em NavigationPage, usar PushModalAsync
+                    // Use modal navigation otherwise
                     await currentPage.Navigation.PushModalAsync(
                         new NavigationPage(new WaterBillingMobileApp.Views.AnonymousRequestPage())
                     );
@@ -222,6 +289,11 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Navigates to the forgot password page.
+        /// Handles both modal and standard navigation depending on current page structure.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task NavigateToForgotPasswordAsync()
         {
             try
@@ -250,6 +322,14 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Displays an alert dialog with the specified title, message, and button text.
+        /// Ensures the alert is shown on the main UI thread.
+        /// </summary>
+        /// <param name="title">The title of the alert.</param>
+        /// <param name="message">The message content.</param>
+        /// <param name="button">The button text.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task ShowAlert(string title, string message, string button)
         {
             try
@@ -279,6 +359,9 @@ namespace WaterBillingMobileApp.ViewModel
             }
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -6,66 +6,139 @@ using WaterBillingMobileApp.Services;
 
 namespace WaterBillingMobileApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the Profile page.
+    /// Manages user profile information including personal details, email, password, and profile photo.
+    /// Provides functionality to view and update all profile-related data.
+    /// Implements the MVVM pattern using CommunityToolkit.Mvvm.
+    /// </summary>
     public partial class ProfileViewModel : ObservableObject
     {
+        /// <summary>
+        /// Service for profile-related API operations.
+        /// </summary>
         private ProfileService _profileService;
-        private readonly IAuthService _authService;
-        private readonly INavigation _navigation;
 
-        public ProfileViewModel(IAuthService authService, INavigation navigation)
+        /// <summary>
+        /// Authentication service for creating authenticated HTTP clients.
+        /// </summary>
+        private readonly IAuthService _authService;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileViewModel"/> class.
+        /// Sets up all commands and initiates asynchronous profile loading.
+        /// </summary>
+        /// <param name="authService">The authentication service.</param>
+        /// <param name="navigation">The navigation service.</param>
+        public ProfileViewModel(IAuthService authService)
         {
             _authService = authService;
-            _navigation = navigation;
             LoadProfileCommand = new AsyncRelayCommand(LoadProfileAsync);
             SaveProfileCommand = new AsyncRelayCommand(SaveProfileAsync);
             ChangePasswordCommand = new AsyncRelayCommand(ChangePasswordAsync);
             ChangeEmailCommand = new AsyncRelayCommand(ChangeEmailAsync);
             ChangePhotoCommand = new AsyncRelayCommand(ChangePhotoAsync);
 
-            _ = InitializeAsync(); // Carrega tudo no arranque
+            _ = InitializeAsync();
         }
 
+        /// <summary>
+        /// Gets or sets the user's full name.
+        /// </summary>
         [ObservableProperty]
         private string fullName;
 
+        /// <summary>
+        /// Gets or sets the user's email address.
+        /// </summary>
         [ObservableProperty]
         private string email;
 
+        /// <summary>
+        /// Gets or sets the user's phone number.
+        /// </summary>
         [ObservableProperty]
         private string phoneNumber;
 
+        /// <summary>
+        /// Gets or sets the file path or URL of the user's profile image.
+        /// </summary>
         [ObservableProperty]
         private string profileImagePath;
 
+        /// <summary>
+        /// Gets or sets the user's address.
+        /// </summary>
         [ObservableProperty]
         private string address;
 
+        /// <summary>
+        /// Gets or sets the current password for verification purposes.
+        /// </summary>
         [ObservableProperty]
         private string currentPassword;
 
+        /// <summary>
+        /// Gets or sets the new password when changing password.
+        /// </summary>
         [ObservableProperty]
         private string newPassword;
 
-        // Novas propriedades adicionadas
+        /// <summary>
+        /// Gets or sets the confirmation of the new password.
+        /// Must match NewPassword for the change to be accepted.
+        /// </summary>
         [ObservableProperty]
         private string confirmPassword;
 
+        /// <summary>
+        /// Gets or sets the new email address when changing email.
+        /// </summary>
         [ObservableProperty]
         private string newEmail;
 
+        /// <summary>
+        /// Gets or sets the current password for email change verification.
+        /// </summary>
         [ObservableProperty]
         private string currentPasswordForEmail;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether an operation is in progress.
+        /// </summary>
         [ObservableProperty]
         private bool isBusy;
 
+        /// <summary>
+        /// Gets the command to load profile data from the API.
+        /// </summary>
         public IAsyncRelayCommand LoadProfileCommand { get; }
+
+        /// <summary>
+        /// Gets the command to save updated profile information.
+        /// </summary>
         public IAsyncRelayCommand SaveProfileCommand { get; }
+
+        /// <summary>
+        /// Gets the command to change the user's password.
+        /// </summary>
         public IAsyncRelayCommand ChangePasswordCommand { get; }
+
+        /// <summary>
+        /// Gets the command to change the user's email address.
+        /// </summary>
         public IAsyncRelayCommand ChangeEmailCommand { get; }
 
+        /// <summary>
+        /// Gets the command to change the user's profile photo.
+        /// </summary>
         public IAsyncRelayCommand ChangePhotoCommand { get; }
 
+        /// <summary>
+        /// Initializes the profile service with an authenticated HTTP client and loads profile data.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task InitializeAsync()
         {
             try
@@ -80,6 +153,11 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Allows the user to select and upload a new profile photo.
+        /// Converts the selected image to base64 format and updates it via the API.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task ChangePhotoAsync()
         {
             try
@@ -91,17 +169,17 @@ namespace WaterBillingMobileApp.ViewModels
 
                 if (result != null)
                 {
-                    // Ler o stream da imagem
+                    // Read image stream
                     using var stream = await result.OpenReadAsync();
                     using var memoryStream = new MemoryStream();
                     await stream.CopyToAsync(memoryStream);
 
-                    // Converter para Base64
+                    // Convert to Base64
                     var imageBytes = memoryStream.ToArray();
                     var base64Image = Convert.ToBase64String(imageBytes);
                     var imageUrl = $"data:image/jpeg;base64,{base64Image}";
 
-                    // Atualizar via API
+                    // Update via API
                     var request = new UpdateProfileImageRequest
                     {
                         ProfileImageUrl = imageUrl
@@ -109,7 +187,7 @@ namespace WaterBillingMobileApp.ViewModels
 
                     await _profileService.UpdateProfileImageAsync(request);
 
-                    // Atualizar UI
+                    // Update UI
                     ProfileImagePath = imageUrl;
 
                     await Shell.Current.DisplayAlert("Success", "Profile photo updated successfully.", "OK");
@@ -120,6 +198,12 @@ namespace WaterBillingMobileApp.ViewModels
                 await Shell.Current.DisplayAlert("Error", $"Failed to update photo: {ex.Message}", "OK");
             }
         }
+
+        /// <summary>
+        /// Loads the user's profile information from the API.
+        /// Updates all profile properties with the retrieved data.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadProfileAsync()
         {
             if (IsBusy || _profileService == null) return;
@@ -145,6 +229,11 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Saves updated profile information (name, phone number, address) to the API.
+        /// Does not include email or password changes.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task SaveProfileAsync()
         {
             if (IsBusy || _profileService == null) return;
@@ -173,23 +262,30 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Changes the user's password after validating current password and new password requirements.
+        /// Requires password confirmation and minimum length validation.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task ChangePasswordAsync()
         {
             if (IsBusy || _profileService == null) return;
 
-            // Validações adicionadas
+            // Validate current password
             if (string.IsNullOrWhiteSpace(CurrentPassword))
             {
                 await Shell.Current.DisplayAlert("Error", "Please enter your current password.", "OK");
                 return;
             }
 
+            // Validate new password length
             if (string.IsNullOrWhiteSpace(NewPassword) || NewPassword.Length < 6)
             {
                 await Shell.Current.DisplayAlert("Error", "New password must be at least 6 characters long.", "OK");
                 return;
             }
 
+            // Validate password confirmation
             if (NewPassword != ConfirmPassword)
             {
                 await Shell.Current.DisplayAlert("Error", "New password and confirmation don't match.", "OK");
@@ -212,7 +308,7 @@ namespace WaterBillingMobileApp.ViewModels
                 {
                     await Shell.Current.DisplayAlert("Success", "Password updated successfully.", "OK");
 
-                    // Limpar campos após sucesso
+                    // Clear fields after success
                     CurrentPassword = string.Empty;
                     NewPassword = string.Empty;
                     ConfirmPassword = string.Empty;
@@ -232,30 +328,37 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
-        // Nova funcionalidade: Alterar Email
+        /// <summary>
+        /// Changes the user's email address after validation and password verification.
+        /// Requires current password for security purposes.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task ChangeEmailAsync()
         {
             if (IsBusy || _profileService == null) return;
 
-            // Validações
+            // Validate new email is not empty
             if (string.IsNullOrWhiteSpace(NewEmail))
             {
                 await Shell.Current.DisplayAlert("Error", "Please enter a new email address.", "OK");
                 return;
             }
 
+            // Validate email format
             if (!IsValidEmail(NewEmail))
             {
                 await Shell.Current.DisplayAlert("Error", "Please enter a valid email address.", "OK");
                 return;
             }
 
+            // Validate password for verification
             if (string.IsNullOrWhiteSpace(CurrentPasswordForEmail))
             {
                 await Shell.Current.DisplayAlert("Error", "Please enter your current password for verification.", "OK");
                 return;
             }
 
+            // Check if new email is different from current
             if (NewEmail.Equals(Email, StringComparison.OrdinalIgnoreCase))
             {
                 await Shell.Current.DisplayAlert("Error", "The new email is the same as your current email.", "OK");
@@ -276,7 +379,7 @@ namespace WaterBillingMobileApp.ViewModels
 
                 await Shell.Current.DisplayAlert("Success", "Email updated successfully.", "OK");
 
-                // Atualizar o email exibido e limpar campos
+                // Update displayed email and clear fields
                 Email = NewEmail;
                 NewEmail = string.Empty;
                 CurrentPasswordForEmail = string.Empty;
@@ -291,7 +394,11 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
-        // Método auxiliar para validar email
+        /// <summary>
+        /// Validates an email address format using MailAddress parsing.
+        /// </summary>
+        /// <param name="email">The email address to validate.</param>
+        /// <returns>True if the email format is valid, false otherwise.</returns>
         private bool IsValidEmail(string email)
         {
             try
@@ -306,6 +413,3 @@ namespace WaterBillingMobileApp.ViewModels
         }
     }
 }
-
-
-
