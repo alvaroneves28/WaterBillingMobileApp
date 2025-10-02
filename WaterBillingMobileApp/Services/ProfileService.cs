@@ -1,10 +1,8 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
+﻿using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
+using WaterBillingMobileApp.Interfaces;
 
-public class ProfileService
+public class ProfileService : IProfileService
 {
     private readonly HttpClient _httpClient;
 
@@ -44,6 +42,6 @@ public class ProfileService
         response.EnsureSuccessStatusCode();
     }
 
-    
+
 
 }

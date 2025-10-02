@@ -3,6 +3,7 @@ using WaterBillingMobileApp.Services;
 using WaterBillingMobileApp.Views;
 using WaterBillingMobileApp.ViewModels;
 using WaterBillingMobileApp.ViewModel;
+using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp
 {
@@ -19,12 +20,18 @@ namespace WaterBillingMobileApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Services
+            // Services com interfaces
             builder.Services.AddSingleton<ResetPasswordService>();
-            builder.Services.AddSingleton<NotificationService>();
-            builder.Services.AddSingleton<AuthService>();
-            builder.Services.AddSingleton<ProfileService>();
+            builder.Services.AddSingleton<IAuthService, AuthService>();
+            builder.Services.AddSingleton<INotificationService, NotificationService>();
 
+            // ProfileService precisa de HttpClient, então registre assim:
+            builder.Services.AddTransient<IProfileService>(sp =>
+            {
+                var authService = sp.GetRequiredService<IAuthService>();
+                var httpClient = authService.CreateAuthenticatedClientAsync().GetAwaiter().GetResult();
+                return new ProfileService(httpClient);
+            });
 
             // ViewModels
             builder.Services.AddTransient<SubmitReadingViewModel>();
@@ -36,10 +43,11 @@ namespace WaterBillingMobileApp
             builder.Services.AddTransient<ProfileViewModel>();
             builder.Services.AddTransient<RatesAndStatusViewModel>();
             builder.Services.AddTransient<ResetPasswordViewModel>();
+            builder.Services.AddTransient<AboutViewModel>();
 
 
             // Pages
-            //builder.Services.AddTransient<AboutPage>();
+            builder.Services.AddTransient<AboutPage>();
             builder.Services.AddTransient<AnonymousRequestPage>();
             builder.Services.AddTransient<ConsumptionHistoryPage>();
             builder.Services.AddTransient<ForgotPasswordPage>();

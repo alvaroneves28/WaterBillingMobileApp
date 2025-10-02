@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Text.Json;
 using WaterBillingMobileApp.DTO;
+using WaterBillingMobileApp.Interfaces;
 using WaterBillingMobileApp.Services;
 
 namespace WaterBillingMobileApp.ViewModels;
@@ -11,10 +12,10 @@ namespace WaterBillingMobileApp.ViewModels;
 public partial class SubmitReadingViewModel : ObservableObject
 {
     private readonly INavigation _navigation;
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
     private HttpClient _httpClient;
 
-    public SubmitReadingViewModel(INavigation navigation, AuthService authService)
+    public SubmitReadingViewModel(INavigation navigation, IAuthService authService)
     {
         _navigation = navigation;
         _authService = authService;

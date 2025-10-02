@@ -2,11 +2,12 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using WaterBillingMobileApp.Interfaces;
 using WaterBillingMobileApp.Model;
 
 namespace WaterBillingMobileApp.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private const string BaseUrl = "https://10.0.2.2:44328/api/";
         private const string TokenKey = "jwt_token";

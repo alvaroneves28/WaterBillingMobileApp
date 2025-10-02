@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
-using WaterBillingMobileApp.Services;
+using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp.Services
 {
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
         private readonly AuthService _authService;
         private DateTime _lastCheckTime;

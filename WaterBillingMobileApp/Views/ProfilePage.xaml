@@ -7,8 +7,23 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Image Source="{Binding ProfileImagePath}" HeightRequest="120" WidthRequest="120" />
+            <!-- Adicione isto antes do "Full Name" -->
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Border StrokeShape="RoundRectangle 60"
+                        HeightRequest="120"
+                        WidthRequest="120"
+                        Stroke="#512BD4"
+                        StrokeThickness="3">
+                        <Image Source="{Binding ProfileImagePath, TargetNullValue='appicon.png'}" 
+                                Aspect="AspectFill" />
+                </Border>
 
+                <Button Text="Change Photo" 
+                        Command="{Binding ChangePhotoCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#512BD4"
+                        FontSize="14" />
+            </VerticalStackLayout>
             <Label Text="Full Name" />
             <Entry Text="{Binding FullName}" />
 

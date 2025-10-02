@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
-using WaterBillingMobileApp.Services;
+using WaterBillingMobileApp.Interfaces;
 using WaterBillingMobileApp.Views;
 
 namespace WaterBillingMobileApp.ViewModels
@@ -10,11 +10,11 @@ namespace WaterBillingMobileApp.ViewModels
     public partial class MainPageViewModel : ObservableObject
     {
         private readonly INavigation _navigation;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
         public IAsyncRelayCommand LogoutCommand { get; }
 
-        public MainPageViewModel(INavigation navigation, AuthService authService)
+        public MainPageViewModel(INavigation navigation, IAuthService authService)
         {
             _navigation = navigation;
             _authService = authService;
@@ -26,8 +26,8 @@ namespace WaterBillingMobileApp.ViewModels
         {
             try
             {
-               
-                Preferences.Remove("AuthToken"); 
+
+                Preferences.Remove("AuthToken");
                 Preferences.Remove("UserEmail");
                 Preferences.Remove("UserName");
 

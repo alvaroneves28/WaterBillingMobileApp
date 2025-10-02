@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
 using WaterBillingMobileApp.Services;
 using System.Net.Http.Headers;
+using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp.ViewModels
 {
@@ -32,10 +33,10 @@ namespace WaterBillingMobileApp.ViewModels
 
         public IAsyncRelayCommand LoadDataCommand { get; }
 
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private readonly INavigation _navigation;
 
-        public RatesAndStatusViewModel(AuthService authService, INavigation navigation)
+        public RatesAndStatusViewModel(IAuthService authService, INavigation navigation)
         {
             _authService = authService ?? throw new ArgumentNullException(nameof(authService));
             _navigation = navigation ?? throw new ArgumentNullException(nameof(navigation));

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WaterBillingMobileApp.DTO;
+using WaterBillingMobileApp.Interfaces;
 using WaterBillingMobileApp.Services;
 
 namespace WaterBillingMobileApp.ViewModels
@@ -8,10 +9,10 @@ namespace WaterBillingMobileApp.ViewModels
     public partial class ProfileViewModel : ObservableObject
     {
         private ProfileService _profileService;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private readonly INavigation _navigation;
 
-        public ProfileViewModel(AuthService authService, INavigation navigation)
+        public ProfileViewModel(IAuthService authService, INavigation navigation)
         {
             _authService = authService;
             _navigation = navigation;
@@ -19,6 +20,7 @@ namespace WaterBillingMobileApp.ViewModels
             SaveProfileCommand = new AsyncRelayCommand(SaveProfileAsync);
             ChangePasswordCommand = new AsyncRelayCommand(ChangePasswordAsync);
             ChangeEmailCommand = new AsyncRelayCommand(ChangeEmailAsync);
+            ChangePhotoCommand = new AsyncRelayCommand(ChangePhotoAsync);
 
             _ = InitializeAsync(); // Carrega tudo no arranque
         }
@@ -60,7 +62,9 @@ namespace WaterBillingMobileApp.ViewModels
         public IAsyncRelayCommand LoadProfileCommand { get; }
         public IAsyncRelayCommand SaveProfileCommand { get; }
         public IAsyncRelayCommand ChangePasswordCommand { get; }
-        public IAsyncRelayCommand ChangeEmailCommand { get; } // Novo comando
+        public IAsyncRelayCommand ChangeEmailCommand { get; }
+
+        public IAsyncRelayCommand ChangePhotoCommand { get; }
 
         private async Task InitializeAsync()
         {
@@ -76,6 +80,46 @@ namespace WaterBillingMobileApp.ViewModels
             }
         }
 
+        private async Task ChangePhotoAsync()
+        {
+            try
+            {
+                var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+                {
+                    Title = "Select a profile photo"
+                });
+
+                if (result != null)
+                {
+                    // Ler o stream da imagem
+                    using var stream = await result.OpenReadAsync();
+                    using var memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream);
+
+                    // Converter para Base64
+                    var imageBytes = memoryStream.ToArray();
+                    var base64Image = Convert.ToBase64String(imageBytes);
+                    var imageUrl = $"data:image/jpeg;base64,{base64Image}";
+
+                    // Atualizar via API
+                    var request = new UpdateProfileImageRequest
+                    {
+                        ProfileImageUrl = imageUrl
+                    };
+
+                    await _profileService.UpdateProfileImageAsync(request);
+
+                    // Atualizar UI
+                    ProfileImagePath = imageUrl;
+
+                    await Shell.Current.DisplayAlert("Success", "Profile photo updated successfully.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Failed to update photo: {ex.Message}", "OK");
+            }
+        }
         private async Task LoadProfileAsync()
         {
             if (IsBusy || _profileService == null) return;

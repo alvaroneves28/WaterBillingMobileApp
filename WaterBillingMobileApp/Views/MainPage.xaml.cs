@@ -1,13 +1,14 @@
-﻿using WaterBillingMobileApp.Services;
+﻿using WaterBillingMobileApp.Interfaces;
+using WaterBillingMobileApp.Services;
 using WaterBillingMobileApp.ViewModels;
 
 namespace WaterBillingMobileApp;
 
 public partial class MainPage : ContentPage
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public MainPage(AuthService authService)
+    public MainPage(IAuthService authService)
     {
         InitializeComponent();
         _authService = authService;

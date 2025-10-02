@@ -1,11 +1,11 @@
 namespace WaterBillingMobileApp.Views
 {
-    using WaterBillingMobileApp.Services;
+    using WaterBillingMobileApp.Interfaces;
     using WaterBillingMobileApp.ViewModels;
 
     public partial class ConsumptionHistoryPage : ContentPage
     {
-        public ConsumptionHistoryPage(INavigation navigation, AuthService authService)
+        public ConsumptionHistoryPage(INavigation navigation, IAuthService authService)
         {
             InitializeComponent();
             BindingContext = new ConsumptionHistoryViewModel(navigation, authService);

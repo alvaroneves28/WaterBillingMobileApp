@@ -3,17 +3,17 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using WaterBillingMobileApp.DTO;
-using WaterBillingMobileApp.Services;
+using WaterBillingMobileApp.Interfaces;
 
 namespace WaterBillingMobileApp.ViewModels
 {
     public partial class InvoicesViewModel : ObservableObject
     {
         private readonly INavigation _navigation;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private HttpClient _httpClient;
 
-        public InvoicesViewModel(INavigation navigation, AuthService authService)
+        public InvoicesViewModel(INavigation navigation, IAuthService authService)
         {
             _navigation = navigation;
             _authService = authService;
